@@ -29,8 +29,9 @@
     --amber-soft:#FAEEDF;
     --rose:#D5629F;
     --rose-soft:#FBE6F3;
+    --hdr-1:#C9B3FC; --hdr-2:#9B7BE8; --hdr-3:#6247C4;
     --shadow: 0 2px 10px rgba(108,66,178,.09), 0 10px 30px rgba(108,66,178,.10);
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -50,6 +51,7 @@
       --amber-soft:#3C2C1A;
       --rose:#F0A0D2;
       --rose-soft:#3C2140;
+      --hdr-1:#6B4FC4; --hdr-2:#4A2F8F; --hdr-3:#241748;
       --shadow: 0 2px 10px rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.3);
     }
   }
@@ -70,14 +72,20 @@
     --amber-soft:#3C2C1A;
     --rose:#F0A0D2;
     --rose-soft:#3C2140;
+    --hdr-1:#6B4FC4; --hdr-2:#4A2F8F; --hdr-3:#241748;
     --shadow: 0 2px 10px rgba(0,0,0,.35), 0 10px 30px rgba(0,0,0,.3);
   }
 
   *{box-sizing:border-box;}
   body{
     background:var(--bg);
-    background-image: radial-gradient(ellipse 900px 480px at 50% -80px, var(--primary-soft) 0%, transparent 70%);
+    background-image:
+      radial-gradient(ellipse 1000px 520px at 50% -100px, var(--primary-soft) 0%, transparent 68%),
+      radial-gradient(circle 420px at 6% 55%, var(--blue-soft) 0%, transparent 75%),
+      radial-gradient(circle 460px at 96% 78%, var(--rose-soft) 0%, transparent 75%),
+      radial-gradient(circle 380px at 100% 8%, var(--primary-soft) 0%, transparent 70%);
     background-repeat:no-repeat;
+    background-attachment: fixed, fixed, fixed, fixed;
     color:var(--ink);
     margin:0;
     padding-bottom: calc(84px + env(safe-area-inset-bottom,0px));
@@ -90,31 +98,59 @@
 
   .wrap{ max-width:640px; margin:0 auto; padding:0 18px; }
 
-  /* ---------- Header ---------- */
+  /* ---------- Header: a night-sky window, not a gradient block ---------- */
   header.top{
     position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    overflow:hidden;
+    border-radius: 26px 26px 0 0;
     background:
-      radial-gradient(circle at 18% 28%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 1.6%),
-      radial-gradient(circle at 68% 18%, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 1.1%),
-      radial-gradient(circle at 42% 68%, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 1.3%),
-      radial-gradient(circle at 85% 62%, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 1%),
-      radial-gradient(circle at 58% 42%, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) .9%),
-      radial-gradient(circle at 12% 82%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 1%),
-      radial-gradient(circle at 92% 15%, rgba(255,255,255,.3) 0%, rgba(255,255,255,0) .8%),
-      linear-gradient(155deg, #B79CFA 0%, #8C6FE8 45%, #5B3FAE 100%);
-    background-size: cover;
+      /* small stars */
+      radial-gradient(circle at 14% 24%, rgba(255,255,255,.75) 0%, transparent 100%),
+      radial-gradient(circle at 74% 14%, rgba(255,255,255,.65) 0%, transparent 100%),
+      radial-gradient(circle at 37% 61%, rgba(255,255,255,.8) 0%, transparent 100%),
+      radial-gradient(circle at 89% 47%, rgba(255,255,255,.6) 0%, transparent 100%),
+      radial-gradient(circle at 6% 70%, rgba(255,255,255,.7) 0%, transparent 100%),
+      radial-gradient(circle at 62% 33%, rgba(255,255,255,.75) 0%, transparent 100%),
+      /* medium stars */
+      radial-gradient(circle at 26% 44%, rgba(255,255,255,.9) 0%, transparent 100%),
+      radial-gradient(circle at 82% 66%, rgba(255,255,255,.85) 0%, transparent 100%),
+      radial-gradient(circle at 52% 12%, rgba(255,255,255,.8) 0%, transparent 100%),
+      /* soft aurora bands */
+      radial-gradient(ellipse 65% 50% at 15% -10%, rgba(255,255,255,.30) 0%, transparent 65%),
+      radial-gradient(ellipse 55% 60% at 95% 15%, var(--hdr-1) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 65% at 20% 100%, var(--hdr-3) 0%, transparent 60%),
+      linear-gradient(150deg, var(--hdr-1) 0%, var(--hdr-2) 50%, var(--hdr-3) 100%);
+    background-size:
+      3px 3px, 2px 2px, 3px 3px, 2px 2px, 2px 2px, 3px 3px,
+      5px 5px, 4px 4px, 5px 5px,
+      cover, cover, cover, cover;
+    background-repeat: no-repeat;
     color:#fff;
-    padding-top:calc(16px + env(safe-area-inset-top,0px));
-    padding-bottom:16px;
+    padding-top:calc(18px + env(safe-area-inset-top,0px));
+    padding-bottom:34px;
     box-shadow:var(--shadow);
   }
-  .top-row{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
-  .day-badge{ display:flex; align-items:baseline; gap:10px; }
-  .day-num{ font-size:44px; font-weight:600; line-height:1; text-shadow:0 0 26px rgba(255,255,255,.55); }
+  header.top::after{
+    content:"";
+    position:absolute; inset:0; pointer-events:none;
+    opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .header-wave{
+    position:absolute; left:-2%; right:-2%; bottom:-1px; width:104%; height:32px;
+    display:block;
+  }
+  .header-moon{ width:20px; height:20px; opacity:.8; filter:drop-shadow(0 0 8px rgba(255,255,255,.4)); }
+  .header-content{ position:relative; z-index:1; padding:2px 4px 0; }
+  .header-started{ font-size:11.5px; opacity:.75; margin-top:12px; }
+  .top-row{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+  .day-badge{ display:flex; align-items:baseline; gap:10px; min-width:0; }
+  .day-num{ font-size:44px; font-weight:600; line-height:1; text-shadow:0 0 22px rgba(255,255,255,.5); }
   .day-label{ font-size:13px; opacity:.85; letter-spacing:.02em; }
-  .top-date{ font-size:12.5px; opacity:.85; text-align:right; }
+  .top-date-col{ flex:0 0 auto; display:flex; flex-direction:column; align-items:flex-end; gap:8px; }
+  .top-date{ font-size:12.5px; opacity:.85; text-align:right; white-space:nowrap; }
   .phase-pill{
-    margin-top:12px; display:inline-flex; align-items:center; gap:8px;
+    margin-top:16px; display:inline-flex; align-items:center; gap:8px;
     background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3);
     border-radius:999px; padding:7px 14px; font-size:13px; font-weight:600;
   }
@@ -206,7 +242,13 @@
   .liquid-ring-wrap{ display:flex; align-items:center; gap:18px; }
   .liquid-num{ font-size:30px; font-weight:700; }
   .liquid-goal{ font-size:13px; color:var(--ink-soft); }
-  .bar-track{ height:12px; border-radius:999px; background:var(--surface-2); overflow:hidden; margin-top:12px; }
+  .bar-track{ position:relative; height:12px; border-radius:999px; background:var(--surface-2); overflow:hidden; margin-top:12px; }
+  .bar-ticks{ position:absolute; inset:0; pointer-events:none; }
+  .bar-ticks span{ position:absolute; top:0; bottom:0; width:2px; background:rgba(255,255,255,.55); }
+
+  .med-time-group{ margin-top:14px; }
+  .med-time-group:first-child{ margin-top:0; }
+  .med-time-group-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--primary); padding:0 0 6px; }
   .bar-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--blue),var(--primary)); transition:width .25s ease; }
   .quick-add{ display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:14px; }
   .qa-btn{
@@ -246,6 +288,9 @@
   .pain-del{ background:none; border:none; color:var(--ink-faint); font-size:16px; cursor:pointer; padding:2px 6px; line-height:1; }
 
   .meal-input-row{ display:flex; flex-direction:column; gap:8px; }
+  .meal-quick-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .meal-chip{ font-size:12px; background:var(--surface-2); border:1px solid var(--border); color:var(--ink-soft); border-radius:999px; padding:6px 12px; cursor:pointer; }
+  .meal-chip:hover{ background:var(--primary-soft); color:var(--primary); border-color:transparent; }
   .meal-select, .meal-text{
     width:100%; border:1px solid var(--border); border-radius:10px;
     padding:9px 12px; font-size:13.5px; background:var(--surface-2); color:var(--ink); font-family:inherit;
@@ -334,16 +379,26 @@
   .source-note{ font-size:11px; color:var(--ink-faint); text-align:center; padding:10px 0 4px; }
 
   /* Sync status */
-  .sync-pill{ margin-top:8px; display:flex; align-items:center; gap:6px; font-size:11.5px; opacity:.85; }
-  .sync-pill .sync-dot{ width:6px; height:6px; border-radius:50%; background:#fff; opacity:.55; }
-  .sync-pill.on .sync-dot{ background:#8CE0B4; opacity:1; }
-
   /* Due-now banner */
   .due-card{ border-left:3px solid var(--amber); background:var(--amber-soft); }
   .due-card .card-title{ color:var(--amber); }
   .due-row{ display:flex; align-items:center; gap:10px; padding:7px 0; }
   .due-row .med-name{ font-weight:650; font-size:13.5px; flex:1; }
   .due-row .med-time{ font-size:12px; color:var(--amber); font-weight:700; }
+  .due-skip-btn{ flex:0 0 auto; background:none; border:none; color:var(--ink-faint); font-size:11px; font-weight:650; text-decoration:underline; cursor:pointer; padding:4px 2px; }
+  .due-row.due-row-compose{ display:block; }
+  .skip-compose{ width:100%; }
+  .skip-compose-title{ font-weight:700; font-size:13px; margin-bottom:8px; color:var(--ink); }
+  .skip-note-input{ width:100%; border:1px solid var(--border); border-radius:10px; padding:9px 12px; font-size:13px; background:var(--surface); color:var(--ink); font-family:inherit; }
+  .skip-compose-btns{ display:flex; gap:8px; margin-top:8px; }
+  .skip-compose-btns button{ flex:1; border-radius:10px; padding:9px; font-weight:700; font-size:12.5px; border:1px solid var(--border); cursor:pointer; }
+  .skip-cancel-btn{ background:var(--surface); color:var(--ink-soft); }
+  .skip-confirm-btn{ background:var(--amber); color:#fff; border-color:var(--amber); }
+
+  .med-row.skipped{ opacity:.55; }
+  .med-row.skipped .med-name{ text-decoration:line-through; color:var(--ink-faint); }
+  .med-skip-note{ font-size:11.5px; color:var(--ink-faint); font-style:italic; margin-top:3px; }
+  .undo-skip-btn{ flex:0 0 auto; align-self:center; background:none; border:1px solid var(--border); color:var(--ink-faint); font-size:10.5px; font-weight:650; padding:5px 10px; border-radius:999px; cursor:pointer; }
 
   /* Reminders toggle */
   .toggle-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:600; cursor:pointer; }
@@ -366,38 +421,104 @@
   .export-fallback{ margin-top:10px; }
   .export-fallback textarea{ width:100%; min-height:160px; border:1px solid var(--border); border-radius:10px; padding:10px; font-size:11.5px; font-family:ui-monospace,monospace; background:var(--surface-2); color:var(--ink); }
 
+  /* Auth gate */
+  .auth-gate{ position:fixed; inset:0; z-index:100; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:24px; }
+  .auth-card{ width:100%; max-width:360px; background:var(--surface); border:1px solid var(--border); border-radius:24px; padding:28px 24px; box-shadow:var(--shadow); text-align:center; }
+  .auth-title{ font-family:'Fraunces', Georgia, serif; font-size:24px; font-weight:650; color:var(--primary-ink); margin-bottom:6px; }
+  .auth-sub{ font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.5; }
+  .auth-input{ width:100%; border:1px solid var(--border); border-radius:12px; padding:11px 14px; font-size:14px; background:var(--surface-2); color:var(--ink); font-family:inherit; margin-bottom:10px; }
+  .auth-error{ font-size:12.5px; color:var(--rose); margin-bottom:10px; text-align:left; }
+
+  /* Read-only sharing */
+  .readonly-banner{ background:var(--amber-soft); color:var(--amber); font-size:12.5px; font-weight:650; text-align:center; padding:10px 16px; }
+  .share-url{ font-size:11.5px; font-family:ui-monospace,monospace; background:var(--surface-2); border-radius:10px; padding:10px 12px; word-break:break-all; color:var(--ink-soft); }
+  body.readonly .qa-btn, body.readonly .check, body.readonly .due-skip-btn, body.readonly .undo-skip-btn,
+  body.readonly .reset-btn, body.readonly input, body.readonly select, body.readonly textarea,
+  body.readonly .photo-del, body.readonly .pain-del, body.readonly .meal-del, body.readonly #photoAddBtn,
+  body.readonly .meal-chip{
+    pointer-events:none !important; opacity:.5; cursor:not-allowed;
+  }
+
   /* ---------- Desktop / wide screens: sidebar nav instead of bottom bar ---------- */
+  /* Entrance motion: each tab's rows settle in on a stagger, on load and on every switch.
+     Targets any direct child of the panel's wrap (a bare section, or a .grid-2 pair) so
+     wrapping two sections into one row doesn't break the count. */
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+  .panel.active > .wrap > *{ animation:fadeUp .5s cubic-bezier(.22,.9,.32,1) both; }
+  .panel.active > .wrap > *:nth-child(1){ animation-delay:.01s; }
+  .panel.active > .wrap > *:nth-child(2){ animation-delay:.06s; }
+  .panel.active > .wrap > *:nth-child(3){ animation-delay:.11s; }
+  .panel.active > .wrap > *:nth-child(4){ animation-delay:.16s; }
+  .panel.active > .wrap > *:nth-child(5){ animation-delay:.21s; }
+  .panel.active > .wrap > *:nth-child(6){ animation-delay:.26s; }
+  .panel.active > .wrap > *:nth-child(7){ animation-delay:.31s; }
+  .panel.active > .wrap > *:nth-child(8){ animation-delay:.36s; }
+  @media (prefers-reduced-motion: reduce){ .panel.active > .wrap > *{ animation:none; } }
+
+  .grid-2{ display:contents; }
+
+  .sidebar-mark{ display:none; }
+
   @media (min-width: 900px){
-    body{ padding-bottom:32px; }
-    header.top{ position:sticky; }
-    .wrap{ max-width:800px; margin:0 auto 0 max(160px, calc(50% - 400px + 80px)); padding:0 24px; }
+    body{ padding-left:116px; padding-bottom:32px; }
+    .wrap{ max-width:960px; margin:0 auto; padding:0 32px; }
 
     nav.tabs{
-      left:0; right:auto; top:0; bottom:0; width:112px;
+      left:0; right:auto; top:0; bottom:0; width:116px;
       border-top:none; border-right:1px solid var(--border);
-      padding:28px 10px; box-shadow:2px 0 16px rgba(108,66,178,.08);
-      display:flex; align-items:flex-start;
+      padding:22px 10px 28px; box-shadow:2px 0 16px rgba(108,66,178,.08);
+      display:flex; flex-direction:column; align-items:stretch; gap:18px;
+    }
+    .sidebar-mark{
+      display:block; text-align:center; font-family:'Fraunces', Georgia, serif; font-style:italic;
+      font-size:13px; color:var(--primary); letter-spacing:.02em; padding-bottom:4px;
+      border-bottom:1px solid var(--border);
     }
     .tabs-inner{ max-width:none; width:100%; display:flex; flex-direction:column; gap:8px; }
     .tab-btn{ min-height:58px; font-size:10.5px; border-radius:14px; }
     .tab-btn svg{ width:21px; height:21px; }
     .tab-badge{ top:8px; right:16px; }
+
+    .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+    .grid-2 > section{ margin-bottom:0; }
   }
 </style>
 </head>
 <body>
 
+<div class="auth-gate" id="authGate" hidden>
+  <div class="auth-card">
+    <div class="auth-title">Recovery Days</div>
+    <div class="auth-sub">Sign in to sync your logs across your phone and laptop.</div>
+    <input type="email" id="authEmail" class="auth-input" placeholder="Email" autocomplete="email">
+    <input type="password" id="authPassword" class="auth-input" placeholder="Password" autocomplete="current-password">
+    <div class="auth-error" id="authError" hidden></div>
+    <button class="qa-btn" id="authSignIn" type="button" style="width:100%;">Sign in</button>
+    <button class="reset-btn" id="authSignUp" type="button" style="width:100%;text-align:center;">First time? Create account</button>
+  </div>
+</div>
+
+<div class="readonly-banner" id="readonlyBanner" hidden>You're viewing a shared, view-only copy — nothing here can be changed.</div>
+
 <div class="wrap">
   <header class="top">
-    <div class="top-row">
-      <div class="day-badge">
-        <div class="day-num num display" id="dayNum">2</div>
-        <div class="day-label">days since<br>surgery</div>
+    <div class="header-content">
+      <div class="top-row">
+        <div class="day-badge">
+          <div class="day-num num display" id="dayNum">2</div>
+          <div class="day-label">days since<br>surgery</div>
+        </div>
+        <div class="top-date-col">
+          <div class="top-date" id="topDate">Tue, Sep 22</div>
+          <svg class="header-moon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" fill="rgba(255,255,255,.85)"/></svg>
+        </div>
       </div>
-      <div class="top-date" id="topDate">Tue, Sep 22</div>
+      <div class="phase-pill"><span class="dot"></span><span id="phasePill">Week 1 — Clear liquids</span></div>
+      <div class="header-started" id="headerStarted">Started Sep 21, 2026</div>
     </div>
-    <div class="phase-pill"><span class="dot"></span><span id="phasePill">Week 1 — Clear liquids</span></div>
-    <div class="sync-pill" id="syncStatus"><span class="sync-dot"></span><span id="syncStatusText">Checking sync…</span></div>
+    <svg class="header-wave" viewBox="0 0 500 40" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,22 C60,38 120,4 190,16 C260,28 300,2 370,14 C430,24 460,6 500,18 L500,40 L0,40 Z" fill="var(--bg)"/>
+    </svg>
   </header>
 
   <main>
@@ -428,6 +549,7 @@
           <div class="card"><div id="todayMeds"></div></div>
         </section>
 
+        <div class="grid-2">
         <section>
           <div class="section-title">Liquids so far today</div>
           <div class="card">
@@ -437,7 +559,7 @@
                 <div class="liquid-goal">goal 1500–2000 ml</div>
               </div>
             </div>
-            <div class="bar-track"><div class="bar-fill" id="liqTodayBar" style="width:0%"></div></div>
+            <div class="bar-track"><div class="bar-fill" id="liqTodayBar" style="width:0%"></div><div class="bar-ticks"><span style="left:25%"></span><span style="left:50%"></span><span style="left:75%"></span></div></div>
             <div class="quick-add">
               <button class="qa-btn" data-add="50">+50</button>
               <button class="qa-btn" data-add="100">+100</button>
@@ -469,6 +591,7 @@
             <button class="reset-btn" id="resetMovement">reset today's counts</button>
           </div>
         </section>
+        </div>
 
         <section>
           <div class="section-title">Pain level</div>
@@ -555,6 +678,7 @@
               </select>
               <input type="text" id="mealText" class="meal-text" placeholder="What did you have?">
             </div>
+            <div class="meal-quick-chips" id="mealQuickChips"></div>
             <button class="qa-btn meal-add" id="mealAdd" style="width:100%;margin-top:8px;">Add to today's log</button>
             <div id="mealLog" style="margin-top:4px;"></div>
             <div class="empty-note" id="mealEmpty" style="display:none;">Nothing logged yet today.</div>
@@ -612,7 +736,7 @@
                 <div class="liquid-goal">daily goal, 1.5–2 L</div>
               </div>
             </div>
-            <div class="bar-track"><div class="bar-fill" id="liqTodayBar2" style="width:0%"></div></div>
+            <div class="bar-track"><div class="bar-fill" id="liqTodayBar2" style="width:0%"></div><div class="bar-ticks"><span style="left:25%"></span><span style="left:50%"></span><span style="left:75%"></span></div></div>
             <div class="quick-add">
               <button class="qa-btn" data-add="50">+50 ml sip</button>
               <button class="qa-btn" data-add="100">+100 ml</button>
@@ -763,6 +887,15 @@
         </section>
 
         <section>
+          <div class="section-title">Share with family</div>
+          <div class="card">
+            <div class="sip-tip">A view-only link — whoever opens it can see your logs but can't add, edit, or delete anything.</div>
+            <div id="shareLinkBox" style="margin-top:10px;"><div class="empty-note">Sign in to generate your link.</div></div>
+            <button class="reset-btn" id="signOutBtn" type="button">Sign out of this device</button>
+          </div>
+        </section>
+
+        <section>
           <div class="section-title">Labs</div>
           <div class="card">
             <div id="labList"></div>
@@ -787,6 +920,7 @@
   <div class="toast" id="toast"></div>
 
   <nav class="tabs">
+    <div class="sidebar-mark">Recovery Days</div>
     <div class="tabs-inner">
       <button class="tab-btn active" data-tab="today">
         <span class="tab-badge" id="tabBadgeToday" hidden></span>
@@ -822,7 +956,8 @@
 </div>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script>
 (function(){
@@ -1039,26 +1174,32 @@
   // ---------- render: header ----------
   document.getElementById("dayNum").textContent = DAY;
   document.getElementById("topDate").textContent = fmtShort(today);
+  document.getElementById("headerStarted").textContent = "Started " + fmtLong(SURGERY);
   var wIdx = currentWeekIndex(DAY);
   document.getElementById("phasePill").textContent = PHASE_LABELS[wIdx];
 
   // ---------- render: meds ----------
-  function medRowHTML(m, checked){
+  function medRowHTML(m, checked, skipInfo){
     var tags = "";
     if (m.fridge) tags += '<span class="tag fridge">fridge</span>';
     if (m.custom !== "neurobion" && m.endDay - DAY <= 2 && m.endDay >= DAY) tags += '<span class="tag ends">ends day '+m.endDay+'</span>';
+    var skipNote = skipInfo ? '<div class="med-skip-note">Skipped'+(skipInfo.note ? ' — '+escapeHtml(skipInfo.note) : '')+'</div>' : '';
+    var actionHTML = skipInfo
+      ? '<button class="undo-skip-btn" data-undo-skip="'+m.id+'" type="button">undo</button>'
+      : '<button class="check'+(checked?' on':'')+'" data-id="'+m.id+'" aria-label="mark taken">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'+
+        '</button>';
     return (
-      '<div class="med-row'+(checked?' done':'')+'" data-id="'+m.id+'">'+
+      '<div class="med-row'+(checked?' done':'')+(skipInfo?' skipped':'')+'" data-id="'+m.id+'">'+
         '<div class="med-time">'+to12(m.time)+'</div>'+
         '<div class="med-main">'+
           '<div class="med-name">'+m.name+'</div>'+
           '<div class="med-ar">'+m.ar+'</div>'+
           (m.instr ? '<div class="med-note">'+m.instr+' &middot; '+m.note+'</div>' : '<div class="med-note">'+m.note+'</div>')+
           (tags ? '<div class="med-tags">'+tags+'</div>' : '')+
+          skipNote+
         '</div>'+
-        '<button class="check'+(checked?' on':'')+'" data-id="'+m.id+'" aria-label="mark taken">'+
-          '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'+
-        '</button>'+
+        actionHTML+
       '</div>'
     );
   }
@@ -1071,21 +1212,38 @@
   var checkedMap = safeGet("meds_"+dateKey(today), {});
 
   function renderTodayMeds(){
+    var skipped = safeGet("skipped_"+dateKey(today), {});
     var active = MEDS.filter(function(m){ return medActiveToday(m, DAY); })
                       .sort(function(a,b){ return a.time.localeCompare(b.time); });
     var el = document.getElementById("todayMeds");
     if (!active.length){ el.innerHTML = '<div class="empty-note">Nothing scheduled today.</div>'; return; }
-    el.innerHTML = active.map(function(m){ return medRowHTML(m, !!checkedMap[m.id]); }).join("");
+    el.innerHTML = active.map(function(m){ return medRowHTML(m, !!checkedMap[m.id], skipped[m.id]); }).join("");
   }
 
+  function timeGroupLabel(t){
+    var h = parseInt(t.split(":")[0], 10);
+    if (h < 12) return "Morning";
+    if (h < 17) return "Afternoon";
+    return "Evening";
+  }
   function renderAllMeds(){
+    var skipped = safeGet("skipped_"+dateKey(today), {});
     var sorted = MEDS.slice().sort(function(a,b){ return a.time.localeCompare(b.time); });
+    var groups = {}, order = [];
+    sorted.forEach(function(m){
+      var g = timeGroupLabel(m.time);
+      if (!groups[g]){ groups[g] = []; order.push(g); }
+      groups[g].push(m);
+    });
     var el = document.getElementById("allMeds");
-    el.innerHTML = sorted.map(function(m){
-      var active = medActiveToday(m, DAY);
-      var row = medRowHTML(m, !!checkedMap[m.id]);
-      if (!active) row = row.replace('class="med-row', 'style="opacity:.5" class="med-row');
-      return row;
+    el.innerHTML = order.map(function(g){
+      var rows = groups[g].map(function(m){
+        var active = medActiveToday(m, DAY);
+        var row = medRowHTML(m, !!checkedMap[m.id], skipped[m.id]);
+        if (!active) row = row.replace('class="med-row', 'style="opacity:.5" class="med-row');
+        return row;
+      }).join("");
+      return '<div class="med-time-group"><div class="med-time-group-label">'+g+'</div>'+rows+'</div>';
     }).join("");
   }
 
@@ -1097,6 +1255,19 @@
   }
 
   document.addEventListener("click", function(e){
+    var undoBtn = e.target.closest(".undo-skip-btn");
+    if (undoBtn){
+      var undoId = undoBtn.getAttribute("data-undo-skip");
+      var undoKey = dateKey(today);
+      var skippedMap = safeGet("skipped_"+undoKey, {});
+      delete skippedMap[undoId];
+      safeSet("skipped_"+undoKey, skippedMap);
+      renderTodayMeds();
+      renderAllMeds();
+      renderDueBanner();
+      pushDay(undoKey);
+      return;
+    }
     var btn = e.target.closest(".check");
     if (!btn) return;
     var id = btn.getAttribute("data-id");
@@ -1128,6 +1299,24 @@
     });
     html += '<div class="week-tip">'+w.tips.join(" ")+'</div>';
     el.innerHTML = html;
+  })();
+
+  // ---------- render: meal quick-add chips (from this week's food guide) ----------
+  (function(){
+    var el = document.getElementById("mealQuickChips");
+    if (!el) return;
+    var w = WEEKS[Math.min(wIdx, WEEKS.length-1)];
+    if (!w){ return; }
+    var items = [];
+    w.groups.forEach(function(g){ items = items.concat(g.items); });
+    items = items.slice(0, 8);
+    el.innerHTML = items.map(function(it){ return '<button type="button" class="meal-chip" data-fill="'+escapeHtml(it)+'">'+escapeHtml(it)+'</button>'; }).join("");
+    el.addEventListener("click", function(e){
+      var chip = e.target.closest(".meal-chip");
+      if (!chip) return;
+      var textEl = document.getElementById("mealText");
+      if (textEl){ textEl.value = chip.getAttribute("data-fill"); textEl.focus(); }
+    });
   })();
 
   // ---------- render: diet accordion ----------
@@ -1365,9 +1554,11 @@
       var prev = log[idx-1];
       var delta = prev ? (e.value-prev.value) : null;
       var deltaStr = delta===null ? "" : (delta===0 ? "no change" : (delta>0?"+":"")+delta.toFixed(1)+" kg");
+      var dirClass = delta===null || delta===0 ? "trend-flat" : (delta<0 ? "trend-down" : "trend-up");
+      var arrow = delta===null ? "" : (delta<0 ? "↓ " : (delta>0 ? "↑ " : "→ "));
       return '<div class="pain-entry"><span class="time" style="flex:1;">'+fmtDateShort(new Date(e.ts))+'</span>'+
         '<span class="lvl" style="width:auto;font-weight:700;">'+e.value+' kg</span>'+
-        '<span style="width:74px;text-align:right;color:var(--ink-faint);font-size:11.5px;">'+deltaStr+'</span>'+
+        '<span class="'+dirClass+'" style="width:84px;text-align:right;font-size:11.5px;font-weight:650;">'+arrow+deltaStr+'</span>'+
         '<button class="pain-del" data-k="'+e.k+'" aria-label="remove">&times;</button></div>';
     });
     el.innerHTML = rows.join("");
@@ -1502,11 +1693,22 @@
     b.addEventListener("click", function(){ goToTab(b.getAttribute("data-tab")); });
   });
 
-  // ================= CLOUD SYNC (db / assets / downloads) =================
+  // ================= CLOUD SYNC (Supabase) =================
   // Local storage stays the source of truth for rendering (nothing above this
-  // line changes). This layer hydrates localStorage from the cloud on load
-  // (so a phone log shows up on a laptop) and mirrors every mutation back up.
-  var cloud = { db:null, assets:null, downloads:null };
+  // line changes). This layer syncs with Supabase so a phone log shows up on
+  // a laptop, and drives the read-only share link for family. Falls back to
+  // local-only if Supabase can't be reached or nobody's signed in yet.
+  var SUPABASE_URL = "https://wdgtpryuplorvkloloxu.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_ZYZuqgI7-ZyUP8sAqljSNQ_q5Gex6xs";
+  var supa = (window.supabase && window.supabase.createClient) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+  var shareToken = (function(){
+    var m = location.search.match(/[?&]share=([0-9a-fA-F-]{36})/);
+    return m ? m[1] : null;
+  })();
+  var READONLY = !!shareToken;
+
+  var cloud = { ready:false, uid:null };
   var writeQueues = {};
   function queueWrite(path, fn){
     var prev = writeQueues[path] || Promise.resolve();
@@ -1522,6 +1724,7 @@
       walk: numOr(safeGet("walk_"+key, 0), 0),
       breath: numOr(safeGet("breath_"+key, 0), 0),
       medsChecked: safeGet("meds_"+key, {}),
+      skipped: safeGet("skipped_"+key, {}),
       pain: safeGet("pain_"+key, []),
       meals: safeGet("meals_"+key, [])
     };
@@ -1531,31 +1734,53 @@
     safeSet("walk_"+key, numOr(d.walk, 0));
     safeSet("breath_"+key, numOr(d.breath, 0));
     safeSet("meds_"+key, d.medsChecked || {});
+    safeSet("skipped_"+key, d.skipped || {});
     safeSet("pain_"+key, d.pain || []);
     safeSet("meals_"+key, d.meals || []);
   }
   function hasAnyLocalSignal(key){
     var d = dayFieldsFromLocal(key);
-    return d.liquidMl>0 || d.walk>0 || d.breath>0 || Object.keys(d.medsChecked||{}).length>0 || (d.pain||[]).length>0 || (d.meals||[]).length>0;
+    return d.liquidMl>0 || d.walk>0 || d.breath>0 || Object.keys(d.medsChecked||{}).length>0 || Object.keys(d.skipped||{}).length>0 || (d.pain||[]).length>0 || (d.meals||[]).length>0;
   }
-  function pushDay(key){
-    if (!cloud.db) return;
-    var data = dayFieldsFromLocal(key);
-    queueWrite("days/"+key, function(){ return cloud.db.doc("days/"+key).set(data); });
+  function dayRowFromFields(key, d){
+    return {
+      user_id: cloud.uid, date_key: key,
+      liquid_ml: d.liquidMl || 0, walk: d.walk || 0, breath: d.breath || 0,
+      meds_checked: d.medsChecked || {}, skipped: d.skipped || {},
+      pain: d.pain || [], meals: d.meals || [],
+      updated_at: new Date().toISOString()
+    };
+  }
+  function dayFieldsFromRow(row){
+    return {
+      liquidMl: row.liquid_ml, walk: row.walk, breath: row.breath,
+      medsChecked: row.meds_checked || {}, skipped: row.skipped || {},
+      pain: row.pain || [], meals: row.meals || []
+    };
   }
 
-  var cloudDayMap = {}; // dateKey -> fields, populated after a cloud pull; History reads this when cloud is on
+  function pushDay(key){
+    if (!cloud.ready || READONLY) return;
+    var data = dayFieldsFromLocal(key);
+    queueWrite("days/"+key, function(){
+      return supa.from("days").upsert(dayRowFromFields(key, data), { onConflict: "user_id,date_key" });
+    });
+  }
+
+  var cloudDayMap = {}; // dateKey -> fields, populated after a cloud pull; History reads this when signed in
   function pullAllDays(){
-    if (!cloud.db) return Promise.resolve();
-    return cloud.db.collection("days").get().then(function(snap){
-      snap.docs.forEach(function(d){
-        cloudDayMap[d.id] = d.data();
-        applyDayFieldsToLocal(d.id, d.data());
+    if (!cloud.ready) return Promise.resolve();
+    return supa.from("days").select("*").eq("user_id", cloud.uid).then(function(res){
+      if (res.error){ console.error("pullAllDays failed", res.error); return; }
+      (res.data || []).forEach(function(row){
+        var fields = dayFieldsFromRow(row);
+        cloudDayMap[row.date_key] = fields;
+        applyDayFieldsToLocal(row.date_key, fields);
       });
-    }).catch(function(e){ console.error("pullAllDays failed", e); });
+    });
   }
   function migrateLocalDaysToCloud(){
-    if (!cloud.db) return Promise.resolve();
+    if (!cloud.ready) return Promise.resolve();
     var jobs = [];
     for (var n = 1; n <= DAY; n++){
       var key = dateKey(addDays(SURGERY, n));
@@ -1565,35 +1790,30 @@
   }
 
   function pushWeight(key, value, ts){
-    if (!cloud.db) return;
-    queueWrite("weights/"+key, function(){ return cloud.db.doc("weights/"+key).set({ value: value, ts: ts }); });
+    if (!cloud.ready || READONLY) return;
+    queueWrite("weights/"+key, function(){
+      return supa.from("weights").upsert({ user_id: cloud.uid, date_key: key, value: value, ts: ts }, { onConflict: "user_id,date_key" });
+    });
   }
   function deleteWeightCloud(key){
-    if (!cloud.db) return;
-    queueWrite("weights/"+key, function(){ return cloud.db.doc("weights/"+key).delete(); });
+    if (!cloud.ready || READONLY) return;
+    queueWrite("weights/"+key, function(){
+      return supa.from("weights").delete().eq("user_id", cloud.uid).eq("date_key", key);
+    });
   }
   function pullWeights(){
-    if (!cloud.db) return Promise.resolve(null);
-    return cloud.db.collection("weights").get().then(function(snap){
-      var log = snap.docs.map(function(d){ var v=d.data(); return { k:d.id, ts:v.ts, value:v.value }; });
+    if (!cloud.ready) return Promise.resolve(null);
+    return supa.from("weights").select("*").eq("user_id", cloud.uid).then(function(res){
+      if (res.error){ console.error("pullWeights failed", res.error); return null; }
+      var log = (res.data || []).map(function(row){ return { k: row.date_key, ts: row.ts, value: row.value }; });
       log.sort(function(a,b){ return a.ts-b.ts; });
       return log;
-    }).catch(function(e){ console.error("pullWeights failed", e); return null; });
+    });
   }
   function migrateLocalWeightsToCloud(){
-    if (!cloud.db) return Promise.resolve();
+    if (!cloud.ready) return Promise.resolve();
     var l = safeGet("weight_log", []);
     return Promise.all(l.map(function(e){ return pushWeight(e.k, e.value, e.ts); }));
-  }
-
-  function settingsRef(){ return cloud.db.doc("settings/prefs"); }
-  function pullSettings(){
-    if (!cloud.db) return Promise.resolve(null);
-    return settingsRef().get().then(function(snap){ return snap.exists ? snap.data() : null; }).catch(function(){ return null; });
-  }
-  function pushSettings(obj){
-    if (!cloud.db) return;
-    queueWrite("settings/prefs", function(){ return settingsRef().set(obj); });
   }
 
   function hydrateFromCloud(){
@@ -1603,14 +1823,6 @@
       .then(function(cloudLog){
         if (cloudLog && cloudLog.length){ safeSet("weight_log", cloudLog); return; }
         return migrateLocalWeightsToCloud();
-      })
-      .then(pullSettings)
-      .then(function(settings){
-        if (settings && typeof settings.remindersEnabled === "boolean"){
-          remindersEnabled = settings.remindersEnabled;
-          var t = document.getElementById("remindersToggle");
-          if (t) t.checked = remindersEnabled;
-        }
       })
       .then(function(){
         checkedMap = safeGet("meds_"+dateKey(today), {});
@@ -1627,15 +1839,44 @@
       .catch(function(e){ console.error("hydrateFromCloud failed", e); });
   }
 
+  function loadReadonlyData(){
+    if (!supa || !shareToken) return Promise.resolve();
+    return Promise.all([
+      supa.rpc("get_shared_days", { token: shareToken }),
+      supa.rpc("get_shared_weights", { token: shareToken })
+    ]).then(function(results){
+      var daysRes = results[0], weightsRes = results[1];
+      if (daysRes.error) console.error("shared days failed", daysRes.error);
+      if (weightsRes.error) console.error("shared weights failed", weightsRes.error);
+      (daysRes.data || []).forEach(function(row){ applyDayFieldsToLocal(row.date_key, dayFieldsFromRow(row)); });
+      var wlog = (weightsRes.data || []).map(function(row){ return { k: row.date_key, ts: row.ts, value: row.value }; });
+      wlog.sort(function(a,b){ return a.ts-b.ts; });
+      if (wlog.length) safeSet("weight_log", wlog);
+    }).then(function(){
+      checkedMap = safeGet("meds_"+dateKey(today), {});
+      renderTodayMeds();
+      renderAllMeds();
+      renderLiquids();
+      renderMovement();
+      renderPain();
+      renderMealLog();
+      renderWeightAll();
+      renderHistory();
+      renderDueBanner();
+    }).catch(function(e){ console.error("loadReadonlyData failed", e); });
+  }
+
   // ================= DUE-NOW BANNER (no permissions needed) =================
   function nowHHMM(){ var d=new Date(); return (d.getHours()<10?"0":"")+d.getHours()+":"+(d.getMinutes()<10?"0":"")+d.getMinutes(); }
   function overdueMedsToday(){
     var now = nowHHMM();
     var checked = safeGet("meds_"+dateKey(today), {});
+    var skipped = safeGet("skipped_"+dateKey(today), {});
     return MEDS.filter(function(m){ return medActiveToday(m, DAY); })
-      .filter(function(m){ return !checked[m.id] && m.time <= now; })
+      .filter(function(m){ return !checked[m.id] && !skipped[m.id] && m.time <= now; })
       .sort(function(a,b){ return a.time.localeCompare(b.time); });
   }
+  var skipComposeId = null;
   function renderDueBanner(){
     var section = document.getElementById("dueSection");
     var list = document.getElementById("dueList");
@@ -1643,19 +1884,59 @@
     var badge = document.getElementById("tabBadgeToday");
     if (badge) badge.hidden = !due.length;
     if (!section || !list) return;
-    if (!due.length){ section.hidden = true; list.innerHTML = ""; return; }
+    if (!due.length){ section.hidden = true; list.innerHTML = ""; skipComposeId = null; return; }
     section.hidden = false;
     list.innerHTML = due.map(function(m){
+      if (skipComposeId === m.id){
+        return '<div class="due-row due-row-compose">'+
+          '<div class="skip-compose">'+
+            '<div class="skip-compose-title">Skip '+m.name+'?</div>'+
+            '<input type="text" class="skip-note-input" id="skipNoteInput" placeholder="Note (optional) — e.g. felt nauseous">'+
+            '<div class="skip-compose-btns">'+
+              '<button class="skip-cancel-btn" type="button" data-cancel-skip="1">Cancel</button>'+
+              '<button class="skip-confirm-btn" type="button" data-confirm-skip="'+m.id+'">Skip dose</button>'+
+            '</div>'+
+          '</div>'+
+        '</div>';
+      }
       return '<div class="due-row">'+
         '<button class="check" data-id="'+m.id+'" aria-label="mark taken">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'+
         '</button>'+
         '<span class="med-name">'+m.name+'</span>'+
         '<span class="med-time">'+to12(m.time)+'</span>'+
+        '<button class="due-skip-btn" type="button" data-skip-id="'+m.id+'">Skip</button>'+
       '</div>';
     }).join("");
   }
   renderDueBanner();
+
+  (function(){
+    var section = document.getElementById("dueSection");
+    if (!section) return;
+    section.addEventListener("click", function(e){
+      var skipBtn = e.target.closest(".due-skip-btn");
+      if (skipBtn){ skipComposeId = skipBtn.getAttribute("data-skip-id"); renderDueBanner(); return; }
+      var cancelBtn = e.target.closest("[data-cancel-skip]");
+      if (cancelBtn){ skipComposeId = null; renderDueBanner(); return; }
+      var confirmBtn = e.target.closest("[data-confirm-skip]");
+      if (confirmBtn){
+        var medId = confirmBtn.getAttribute("data-confirm-skip");
+        var noteEl = document.getElementById("skipNoteInput");
+        var note = noteEl ? noteEl.value.trim() : "";
+        var key = dateKey(today);
+        var skipped = safeGet("skipped_"+key, {});
+        skipped[medId] = { note: note, ts: Date.now() };
+        safeSet("skipped_"+key, skipped);
+        skipComposeId = null;
+        renderDueBanner();
+        renderTodayMeds();
+        renderAllMeds();
+        pushDay(key);
+        showToast("Marked as skipped");
+      }
+    });
+  })();
 
   // ================= REMINDERS (browser notifications, best effort) =================
   var remindersEnabled = safeGet("remindersEnabled", false);
@@ -1667,7 +1948,6 @@
     t.addEventListener("change", function(){
       remindersEnabled = t.checked;
       safeSet("remindersEnabled", remindersEnabled);
-      pushSettings({ remindersEnabled: remindersEnabled });
       var note = document.getElementById("reminderNote");
       if (remindersEnabled && "Notification" in window){
         try{
@@ -1852,32 +2132,125 @@
     try{ navigator.clipboard.writeText(text); }catch(e){}
   }
 
-  // ================= BOOT CLOUD =================
-  (function initCloud(){
-    var statusPill = document.getElementById("syncStatus");
-    var statusText = document.getElementById("syncStatusText");
-    var capPromise;
-    try{
-      if (window.claude && typeof window.claude.use === "function"){
-        capPromise = Promise.all([ window.claude.use("db"), window.claude.use("assets"), window.claude.use("downloads") ]);
-      } else {
-        capPromise = Promise.resolve([null,null,null]);
-      }
-    }catch(e){ capPromise = Promise.resolve([null,null,null]); }
+  // ================= AUTH + BOOT =================
+  function applyReadonlyLock(){
+    document.body.classList.add("readonly");
+    var banner = document.getElementById("readonlyBanner");
+    if (banner) banner.hidden = false;
+  }
+  function showAuthGate(){
+    var gate = document.getElementById("authGate");
+    if (gate) gate.hidden = false;
+  }
+  function hideAuthGate(){
+    var gate = document.getElementById("authGate");
+    if (gate) gate.hidden = true;
+  }
 
-    capPromise.then(function(res){
-      cloud.db = res[0]; cloud.assets = res[1]; cloud.downloads = res[2];
-      if (cloud.db){
-        if (statusPill) statusPill.classList.add("on");
-        if (statusText) statusText.textContent = "Synced across devices";
-        return hydrateFromCloud().then(loadAndRenderPhotos);
-      } else if (statusText) {
-        statusText.textContent = "This device only";
-      }
-    }).catch(function(e){
-      console.error("cloud init failed", e);
-      if (statusText) statusText.textContent = "This device only";
+  var cachedShareToken = null;
+  function ensureShareToken(){
+    if (!cloud.ready) return Promise.resolve(null);
+    return supa.from("profiles").select("share_token").eq("id", cloud.uid).single().then(function(res){
+      if (res.error || !res.data){ console.error("share token fetch failed", res.error); return null; }
+      cachedShareToken = res.data.share_token;
+      renderShareLink();
+      return cachedShareToken;
     });
+  }
+  function renderShareLink(){
+    var el = document.getElementById("shareLinkBox");
+    if (!el || !cachedShareToken) return;
+    var url = location.origin + location.pathname + "?share=" + cachedShareToken;
+    el.innerHTML =
+      '<div class="share-url" id="shareUrlText">'+url+'</div>'+
+      '<button class="qa-btn" id="copyShareBtn" type="button" style="width:100%;margin-top:8px;">Copy link</button>';
+    var copyBtn = document.getElementById("copyShareBtn");
+    if (copyBtn) copyBtn.addEventListener("click", function(){
+      try{ navigator.clipboard.writeText(url); showToast("Link copied"); }catch(e){}
+    });
+  }
+
+  function wireAuthForm(){
+    var emailEl = document.getElementById("authEmail");
+    var passEl = document.getElementById("authPassword");
+    var errorEl = document.getElementById("authError");
+    var signInBtn = document.getElementById("authSignIn");
+    var signUpBtn = document.getElementById("authSignUp");
+
+    function showAuthError(msg){ if (errorEl){ errorEl.textContent = msg; errorEl.hidden = false; } }
+    function clearAuthError(){ if (errorEl){ errorEl.hidden = true; } }
+
+    if (signInBtn) signInBtn.addEventListener("click", function(){
+      clearAuthError();
+      var email = emailEl ? emailEl.value.trim() : "";
+      var password = passEl ? passEl.value : "";
+      if (!email || !password){ showAuthError("Enter your email and password."); return; }
+      signInBtn.disabled = true; signInBtn.textContent = "Signing in…";
+      supa.auth.signInWithPassword({ email: email, password: password }).then(function(res){
+        signInBtn.disabled = false; signInBtn.textContent = "Sign in";
+        if (res.error) showAuthError(res.error.message);
+      });
+    });
+
+    if (signUpBtn) signUpBtn.addEventListener("click", function(){
+      clearAuthError();
+      var email = emailEl ? emailEl.value.trim() : "";
+      var password = passEl ? passEl.value : "";
+      if (!email || !password){ showAuthError("Enter an email and password to create your account."); return; }
+      if (password.length < 6){ showAuthError("Password needs to be at least 6 characters."); return; }
+      signUpBtn.disabled = true; signUpBtn.textContent = "Creating…";
+      supa.auth.signUp({ email: email, password: password }).then(function(res){
+        signUpBtn.disabled = false; signUpBtn.textContent = "First time? Create account";
+        if (res.error){ showAuthError(res.error.message); return; }
+        if (!(res.data && res.data.session)){
+          showAuthError("Check your email to confirm your account, then sign in.");
+        }
+      });
+    });
+  }
+
+  (function(){
+    var signOutBtn = document.getElementById("signOutBtn");
+    if (signOutBtn) signOutBtn.addEventListener("click", function(){
+      if (supa) supa.auth.signOut();
+    });
+  })();
+
+  (function boot(){
+    if (READONLY){
+      if (!supa) return;
+      loadReadonlyData();
+      applyReadonlyLock();
+      return;
+    }
+    if (!supa) return;
+
+    supa.auth.getSession().then(function(res){
+      var session = res.data && res.data.session;
+      if (session){
+        cloud.ready = true;
+        cloud.uid = session.user.id;
+        hideAuthGate();
+        hydrateFromCloud().then(ensureShareToken);
+      } else {
+        showAuthGate();
+      }
+    });
+
+    supa.auth.onAuthStateChange(function(event, session){
+      if (event === "SIGNED_IN" && session){
+        cloud.ready = true;
+        cloud.uid = session.user.id;
+        hideAuthGate();
+        hydrateFromCloud().then(ensureShareToken);
+      } else if (event === "SIGNED_OUT"){
+        cloud.ready = false;
+        cloud.uid = null;
+        showAuthGate();
+      }
+    });
+
+    wireAuthForm();
   })();
 
 })();
