@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Recovery Days</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A9%B9%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Personal post-op tracker for gastric sleeve recovery — meds, liquids, meals, weight, and photos.">
+<style>
+  [hidden]{ display:none !important; }
+  img{ max-width:100%; }
+  :root{
+    color-scheme: light dark;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    --bg:#FAF7F1;
+    --surface:#FFFFFF;
+    --surface-2:#F2EEE4;
+    --ink:#242E28;
+    --ink-soft:#5E6B62;
+    --ink-faint:#8B968D;
+    --border:#E6E0D2;
+    --primary:#3E7D63;
+    --primary-ink:#1F4A3A;
+    --primary-soft:#E4EFE7;
+    --blue:#3B6E93;
+    --blue-soft:#E3EDF3;
+    --amber:#A9752E;
+    --amber-soft:#F6EBD8;
+    --rose:#A94B3E;
+    --rose-soft:#F6E4E0;
+    --shadow: 0 1px 2px rgba(36,46,40,.06), 0 4px 14px rgba(36,46,40,.05);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#161B18;
+      --surface:#1E241F;
+      --surface-2:#252C26;
+      --ink:#EDEFEA;
+      --ink-soft:#AEB8AF;
+      --ink-faint:#7C877D;
+      --border:#333B33;
+      --primary:#6FBE9C;
+      --primary-ink:#CFEEDE;
+      --primary-soft:#243830;
+      --blue:#7FB2D9;
+      --blue-soft:#212F3A;
+      --amber:#E3B36B;
+      --amber-soft:#3A2F1D;
+      --rose:#E28A7B;
+      --rose-soft:#3A211D;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#161B18;
+    --surface:#1E241F;
+    --surface-2:#252C26;
+    --ink:#EDEFEA;
+    --ink-soft:#AEB8AF;
+    --ink-faint:#7C877D;
+    --border:#333B33;
+    --primary:#6FBE9C;
+    --primary-ink:#CFEEDE;
+    --primary-soft:#243830;
+    --blue:#7FB2D9;
+    --blue-soft:#212F3A;
+    --amber:#E3B36B;
+    --amber-soft:#3A2F1D;
+    --rose:#E28A7B;
+    --rose-soft:#3A211D;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 14px rgba(0,0,0,.25);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    margin:0;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom,0px));
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{ font-family:'Fraunces', Georgia, serif; text-wrap:balance; }
+  .num{ font-variant-numeric: tabular-nums; }
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  .wrap{ max-width:640px; margin:0 auto; padding:0 18px; }
+
+  /* ---------- Header ---------- */
+  header.top{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:20;
+    background:linear-gradient(180deg, var(--primary) 0%, var(--primary-ink) 130%);
+    color:#fff;
+    padding-top:calc(16px + env(safe-area-inset-top,0px));
+    padding-bottom:16px;
+    box-shadow:var(--shadow);
+  }
+  .top-row{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; }
+  .day-badge{ display:flex; align-items:baseline; gap:10px; }
+  .day-num{ font-size:44px; font-weight:600; line-height:1; }
+  .day-label{ font-size:13px; opacity:.85; letter-spacing:.02em; }
+  .top-date{ font-size:12.5px; opacity:.85; text-align:right; }
+  .phase-pill{
+    margin-top:12px; display:inline-flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.3);
+    border-radius:999px; padding:7px 14px; font-size:13px; font-weight:600;
+  }
+  .phase-pill .dot{ width:7px; height:7px; border-radius:50%; background:#fff; }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{
+    position:fixed; left:0; right:0; bottom:0; z-index:30;
+    background:var(--surface);
+    border-top:1px solid var(--border);
+    padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));
+    box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+  }
+  .tabs-inner{ max-width:640px; margin:0 auto; display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
+  .tab-btn{
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    background:none; border:none; color:var(--ink-faint);
+    padding:6px 1px; border-radius:11px; cursor:pointer; font-size:8.8px; font-weight:600;
+    letter-spacing:.01em;
+  }
+  .tab-btn svg{ width:17px; height:17px; }
+  .tab-btn.active{ color:var(--primary); background:var(--primary-soft); }
+
+  /* ---------- Panels ---------- */
+  main{ padding-top:18px; }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  section{ margin-bottom:22px; }
+  .section-title{ font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); font-weight:700; margin:0 0 10px 2px; }
+
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:16px; box-shadow:var(--shadow);
+  }
+  .card + .card{ margin-top:10px; }
+
+  /* Med row */
+  .med-row{ display:flex; gap:12px; align-items:flex-start; padding:11px 0; border-bottom:1px solid var(--border); }
+  .med-row:last-child{ border-bottom:none; }
+  .med-time{
+    flex:0 0 54px; font-weight:700; font-size:13.5px; color:var(--primary);
+    padding-top:2px;
+  }
+  .med-main{ flex:1; min-width:0; }
+  .med-name{ font-weight:650; font-size:14.5px; }
+  .med-ar{ font-size:12px; color:var(--ink-faint); }
+  .med-note{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .med-tags{ display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+  .tag{ font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px; }
+  .tag.fridge{ background:var(--blue-soft); color:var(--blue); }
+  .tag.ends{ background:var(--amber-soft); color:var(--amber); }
+  .check{
+    flex:0 0 26px; width:26px; height:26px; border-radius:8px; border:2px solid var(--border);
+    background:var(--surface); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    margin-top:1px;
+  }
+  .check.on{ background:var(--primary); border-color:var(--primary); }
+  .check svg{ width:15px; height:15px; stroke:#fff; display:none; }
+  .check.on svg{ display:block; }
+  .med-row.done .med-name{ text-decoration:line-through; color:var(--ink-faint); }
+  .med-row.done .med-note{ color:var(--ink-faint); }
+
+  .empty-note{ font-size:13px; color:var(--ink-faint); padding:8px 2px; }
+
+  /* Liquids */
+  .liquid-ring-wrap{ display:flex; align-items:center; gap:18px; }
+  .liquid-num{ font-size:30px; font-weight:700; }
+  .liquid-goal{ font-size:13px; color:var(--ink-soft); }
+  .bar-track{ height:12px; border-radius:999px; background:var(--surface-2); overflow:hidden; margin-top:12px; }
+  .bar-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--blue),var(--primary)); transition:width .25s ease; }
+  .quick-add{ display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:14px; }
+  .qa-btn{
+    border:1px solid var(--border); background:var(--blue-soft); color:var(--blue);
+    border-radius:12px; padding:10px 4px; font-weight:700; font-size:13px; cursor:pointer;
+  }
+  .reset-btn{ margin-top:12px; background:none; border:none; color:var(--ink-faint); font-size:12px; text-decoration:underline; cursor:pointer; padding:4px; }
+  .sip-tip{ font-size:12.5px; color:var(--ink-soft); margin-top:10px; line-height:1.5; }
+
+  .move-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .move-tile{ background:var(--surface-2); border-radius:14px; padding:14px 8px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .move-icon{ width:26px; height:26px; color:var(--primary); }
+  .move-label{ font-size:12.5px; font-weight:650; margin-top:2px; }
+  .move-count{ font-size:13px; color:var(--ink-soft); }
+  .move-btn{ margin-top:6px; width:100%; background:var(--primary-soft); color:var(--primary); }
+
+  .pain-last{ font-size:13px; color:var(--ink-soft); margin-bottom:12px; }
+  .pain-scale{ display:flex; flex-wrap:wrap; gap:5px; }
+  .pain-btn{
+    width:29px; height:29px; border-radius:50%; border:1px solid var(--border);
+    font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    background:var(--surface-2); color:var(--ink-soft);
+  }
+  .pain-btn.low{ background:var(--primary-soft); color:var(--primary); border-color:transparent; }
+  .pain-btn.mid{ background:var(--amber-soft); color:var(--amber); border-color:transparent; }
+  .pain-btn.high{ background:var(--rose-soft); color:var(--rose); border-color:transparent; }
+  .pain-legend{ display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; font-size:11.5px; color:var(--ink-faint); }
+  .pain-legend span{ display:inline-flex; align-items:center; gap:5px; }
+  .dot{ width:8px; height:8px; border-radius:50%; display:inline-block; }
+  .dot.low{ background:var(--primary); }
+  .dot.mid{ background:var(--amber); }
+  .dot.high{ background:var(--rose); }
+  .pain-entry{ display:flex; align-items:center; gap:9px; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .pain-entry:last-child{ border-bottom:none; }
+  .pain-entry .lvl{ font-weight:700; width:20px; text-align:center; }
+  .pain-entry .time{ color:var(--ink-soft); flex:1; }
+  .pain-del{ background:none; border:none; color:var(--ink-faint); font-size:16px; cursor:pointer; padding:2px 6px; line-height:1; }
+
+  .meal-input-row{ display:flex; flex-direction:column; gap:8px; }
+  .meal-select, .meal-text{
+    width:100%; border:1px solid var(--border); border-radius:10px;
+    padding:9px 12px; font-size:13.5px; background:var(--surface-2); color:var(--ink); font-family:inherit;
+  }
+  .meal-entry{ display:flex; align-items:flex-start; gap:9px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .meal-entry:last-child{ border-bottom:none; }
+  .meal-time{ flex:0 0 54px; color:var(--ink-faint); font-size:11.5px; padding-top:3px; }
+  .meal-type-badge{ flex:0 0 auto; font-size:10px; font-weight:700; background:var(--primary-soft); color:var(--primary); border-radius:999px; padding:3px 9px; white-space:nowrap; margin-top:1px; }
+  .meal-desc{ flex:1; min-width:0; padding-top:2px; }
+  .meal-del{ background:none; border:none; color:var(--ink-faint); font-size:16px; cursor:pointer; padding:0 4px; line-height:1.6; }
+
+  .weight-input-row{ display:flex; align-items:center; gap:8px; }
+  .weight-input{
+    flex:1; min-width:0; border:1px solid var(--border); border-radius:10px;
+    padding:10px 12px; font-size:16px; background:var(--surface-2); color:var(--ink); font-family:inherit;
+  }
+  .weight-unit{ font-size:13px; color:var(--ink-faint); font-weight:600; }
+  .weight-save{ flex:0 0 auto; padding:10px 16px; }
+
+  .stat-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; text-align:center; }
+  .stat-tile{ background:var(--surface-2); border-radius:12px; padding:10px 4px; }
+  .stat-value{ font-size:16px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .stat-label{ font-size:10px; color:var(--ink-faint); margin-top:2px; }
+
+  .chart-wrap{ width:100%; margin-top:14px; }
+  .chart-svg{ width:100%; height:auto; display:block; overflow:visible; }
+  .chart-area{ fill:var(--primary-soft); }
+  .chart-line{ fill:none; stroke:var(--primary); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .chart-dot{ fill:var(--primary); }
+  .chart-dot-start{ fill:var(--ink-faint); }
+  .chart-label{ font-size:8px; fill:var(--ink-faint); }
+  .chart-value{ font-size:9px; fill:var(--primary); font-weight:700; }
+
+  .hist-summary{ font-size:13.5px; color:var(--ink); font-weight:650; }
+  .hist-row{ padding:11px 0; border-bottom:1px solid var(--border); }
+  .hist-row:last-child{ border-bottom:none; }
+  .hist-date{ display:flex; align-items:baseline; gap:8px; margin-bottom:6px; }
+  .hist-date b{ font-size:13.5px; }
+  .hist-date span{ font-size:12px; color:var(--ink-faint); }
+  .hist-stats{ display:flex; flex-wrap:wrap; gap:6px; }
+  .hist-stat{ font-size:11.5px; font-weight:650; color:var(--ink-soft); background:var(--surface-2); border-radius:999px; padding:4px 10px; }
+  .hist-stat.good{ color:var(--primary); background:var(--primary-soft); }
+
+  /* Diet accordion */
+  .week-card{ border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:10px; background:var(--surface); }
+  .week-card.current{ border-color:var(--primary); box-shadow:0 0 0 2px var(--primary-soft); }
+  .week-head{
+    width:100%; display:flex; justify-content:space-between; align-items:center; gap:10px;
+    padding:14px 16px; background:none; border:none; cursor:pointer; text-align:left;
+  }
+  .week-head-left{ display:flex; flex-direction:column; gap:2px; }
+  .week-range{ font-size:11.5px; color:var(--ink-faint); font-weight:700; text-transform:uppercase; letter-spacing:.06em; }
+  .week-title{ font-size:15.5px; font-weight:650; font-family:'Fraunces', Georgia, serif; }
+  .week-now-badge{ font-size:10.5px; font-weight:700; background:var(--primary); color:#fff; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .chev{ width:18px; height:18px; color:var(--ink-faint); transition:transform .2s; flex:0 0 auto; }
+  .week-card.open .chev{ transform:rotate(180deg); }
+  .week-body{ display:none; padding:0 16px 16px; }
+  .week-card.open .week-body{ display:block; }
+  .food-group{ margin-top:10px; }
+  .food-group-label{ font-size:12px; font-weight:700; color:var(--ink-soft); margin-bottom:5px; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{ font-size:12.5px; background:var(--surface-2); border-radius:999px; padding:5px 11px; }
+  .week-tip{ font-size:12.5px; color:var(--ink-soft); background:var(--surface-2); border-radius:10px; padding:9px 11px; margin-top:10px; line-height:1.5; }
+
+  .golden-list{ margin:0; padding-left:18px; font-size:13px; color:var(--ink-soft); line-height:1.7; }
+  .golden-list li{ margin-bottom:4px; }
+
+  /* Guide tab */
+  .warn-card{ border-left:3px solid var(--rose); }
+  .warn-card .card-title{ color:var(--rose); }
+  .card-title{ font-weight:700; font-size:14.5px; margin-bottom:6px; font-family:'Fraunces', Georgia, serif; }
+  .kv-line{ font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:4px; }
+  .kv-line b{ color:var(--ink); font-weight:650; }
+  .call-box{ background:var(--rose-soft); border-radius:12px; padding:12px 14px; margin-top:8px; }
+  .call-box .card-title{ color:var(--rose); margin-bottom:6px;}
+  .call-box ul{ margin:0; padding-left:18px; font-size:13px; color:var(--ink); line-height:1.7; }
+
+  .lab-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); }
+  .lab-row:last-child{ border-bottom:none; }
+  .lab-name{ font-weight:650; font-size:13.5px; }
+  .lab-date{ font-size:12.5px; color:var(--ink-soft); }
+  .lab-tests{ font-size:11.5px; color:var(--ink-faint); margin-top:2px; }
+
+  .disclaimer{ font-size:11.5px; color:var(--ink-faint); line-height:1.6; padding:10px 2px 4px; }
+
+  .source-note{ font-size:11px; color:var(--ink-faint); text-align:center; padding:10px 0 4px; }
+
+  /* Sync status */
+  .sync-pill{ margin-top:8px; display:flex; align-items:center; gap:6px; font-size:11.5px; opacity:.85; }
+  .sync-pill .sync-dot{ width:6px; height:6px; border-radius:50%; background:#fff; opacity:.55; }
+  .sync-pill.on .sync-dot{ background:#8CE0B4; opacity:1; }
+
+  /* Due-now banner */
+  .due-card{ border-left:3px solid var(--amber); background:var(--amber-soft); }
+  .due-card .card-title{ color:var(--amber); }
+  .due-row{ display:flex; align-items:center; gap:10px; padding:7px 0; }
+  .due-row .med-name{ font-weight:650; font-size:13.5px; flex:1; }
+  .due-row .med-time{ font-size:12px; color:var(--amber); font-weight:700; }
+
+  /* Reminders toggle */
+  .toggle-row{ display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:600; cursor:pointer; }
+  .toggle-row input{ width:18px; height:18px; accent-color:var(--primary); }
+
+  /* Photos */
+  .photo-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
+  .photo-tile{ position:relative; border-radius:12px; overflow:hidden; aspect-ratio:1; background:var(--surface-2); }
+  .photo-tile img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .photo-tile .photo-date{ position:absolute; left:0; right:0; bottom:0; background:linear-gradient(0deg,rgba(0,0,0,.55),transparent); color:#fff; font-size:9.5px; padding:3px 6px; font-weight:650; }
+  .photo-tile .photo-del{ position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%; background:rgba(0,0,0,.5); color:#fff; border:none; font-size:13px; line-height:1; cursor:pointer; }
+  .photo-compose{ margin-top:10px; padding:10px; border-radius:12px; background:var(--surface-2); }
+  .photo-compose img{ width:100%; max-height:160px; object-fit:cover; border-radius:10px; display:block; margin-bottom:8px; }
+  .photo-note-input{ width:100%; border:1px solid var(--border); border-radius:10px; padding:9px 12px; font-size:13.5px; background:var(--surface); color:var(--ink); font-family:inherit; }
+  .photo-compose-btns{ display:flex; gap:8px; margin-top:8px; }
+  .photo-compose-btns button{ flex:1; border-radius:10px; padding:9px; font-weight:700; font-size:13px; border:1px solid var(--border); cursor:pointer; }
+  .photo-save{ background:var(--primary); color:#fff; border-color:var(--primary); }
+  .photo-cancel{ background:var(--surface); color:var(--ink-soft); }
+
+  .export-fallback{ margin-top:10px; }
+  .export-fallback textarea{ width:100%; min-height:160px; border:1px solid var(--border); border-radius:10px; padding:10px; font-size:11.5px; font-family:ui-monospace,monospace; background:var(--surface-2); color:var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <div class="day-badge">
+        <div class="day-num num display" id="dayNum">2</div>
+        <div class="day-label">days since<br>surgery</div>
+      </div>
+      <div class="top-date" id="topDate">Tue, Sep 22</div>
+    </div>
+    <div class="phase-pill"><span class="dot"></span><span id="phasePill">Week 1 — Clear liquids</span></div>
+    <div class="sync-pill" id="syncStatus"><span class="sync-dot"></span><span id="syncStatusText">Checking sync…</span></div>
+  </header>
+
+  <main>
+    <!-- TODAY -->
+    <div class="panel active" id="panel-today">
+      <div class="wrap" style="padding:0;">
+        <section id="dueSection" hidden>
+          <div class="section-title">Due now</div>
+          <div class="card due-card">
+            <div class="card-title">These are overdue for today</div>
+            <div id="dueList"></div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Today's meds</div>
+          <div class="card"><div id="todayMeds"></div></div>
+        </section>
+
+        <section>
+          <div class="section-title">Liquids so far today</div>
+          <div class="card">
+            <div class="liquid-ring-wrap">
+              <div>
+                <div class="liquid-num"><span class="num" id="liqTodayVal">0</span> ml</div>
+                <div class="liquid-goal">goal 1500–2000 ml</div>
+              </div>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="liqTodayBar" style="width:0%"></div></div>
+            <div class="quick-add">
+              <button class="qa-btn" data-add="50">+50</button>
+              <button class="qa-btn" data-add="100">+100</button>
+              <button class="qa-btn" data-add="150">+150</button>
+              <button class="qa-btn" data-add="180">+180</button>
+              <button class="qa-btn" data-add="200">+200</button>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Every hour — 5 min each</div>
+          <div class="card">
+            <div class="move-grid">
+              <div class="move-tile">
+                <svg class="move-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4.5" r="1.8"/><path d="M15 8l-3 3 1 5-3 5M9 12l3-1 2 2 3-1"/></svg>
+                <div class="move-label">Walk</div>
+                <div class="move-count"><span class="num" id="walkCount">0</span> today</div>
+                <button class="qa-btn move-btn" id="walkAdd">+1 walk</button>
+              </div>
+              <div class="move-tile">
+                <svg class="move-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15a8 8 0 0116 0"/><path d="M8 15a4 4 0 018 0"/><circle cx="12" cy="15" r="1"/></svg>
+                <div class="move-label">Deep breathing</div>
+                <div class="move-count"><span class="num" id="breathCount">0</span> today</div>
+                <button class="qa-btn move-btn" id="breathAdd">+1 set</button>
+              </div>
+            </div>
+            <div class="sip-tip">Aim for a 5-minute walk and 5 minutes of deep breathing every waking hour, roughly 12–14 times a day. It's one of the simplest ways to protect against blood clots and chest complications in these first couple of weeks.</div>
+            <button class="reset-btn" id="resetMovement">reset today's counts</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Pain level</div>
+          <div class="card">
+            <div class="pain-last" id="painLast">No reading logged yet today</div>
+            <div class="pain-scale" id="painScale"></div>
+            <div class="pain-legend"><span><i class="dot low"></i>0–3 mild</span><span><i class="dot mid"></i>4–6 moderate</span><span><i class="dot high"></i>7–10 severe</span></div>
+            <div id="painLog"></div>
+            <button class="reset-btn" id="resetPain">clear today's log</button>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">On your plate this phase</div>
+          <div class="card" id="todayPhaseCard"></div>
+        </section>
+
+        <section>
+          <button class="week-head" style="width:100%;background:var(--rose-soft);border-radius:14px;" onclick="goToTab('guide')">
+            <div class="week-head-left">
+              <div class="week-title" style="color:var(--rose);font-size:14px;">Dizzy, very dry mouth, or dark urine?</div>
+              <div class="week-range" style="color:var(--rose);opacity:.8;">Open the Guide tab for dehydration &amp; warning signs</div>
+            </div>
+          </button>
+        </section>
+      </div>
+    </div>
+
+    <!-- MEDS -->
+    <div class="panel" id="panel-meds">
+      <div class="wrap" style="padding:0;">
+        <section>
+          <div class="section-title">Daily schedule</div>
+          <div class="card"><div id="allMeds"></div></div>
+        </section>
+
+        <section>
+          <div class="section-title">Reminders</div>
+          <div class="card">
+            <label class="toggle-row"><input type="checkbox" id="remindersToggle"> <span>Browser alerts when a med is due</span></label>
+            <div class="sip-tip" id="reminderNote">Works best while this tab stays open. The "Due now" list on the Today tab always shows overdue meds, alerts or not.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">As needed (PRN)</div>
+          <div class="card" id="prnMeds"></div>
+        </section>
+
+        <section>
+          <div class="section-title">Coming up, after ~3 months</div>
+          <div class="card">
+            <div class="kv-line"><b>Centrum chewable → Centrum tablets</b>, 1:00 PM</div>
+            <div class="kv-line"><b>Caltrate chewable → Calmag tablet</b>, 9:00 PM</div>
+            <div class="kv-line"><b>Neurobion weekly/monthly → Omnevora</b>, one IM injection a month for the rest of the year</div>
+            <div class="week-tip">This is your pharmacist's guidance for when the chewable vitamins run out — free to switch to tablets at that point, or keep the chewables if you prefer them.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Storage</div>
+          <div class="card">
+            <div class="kv-line"><b>Keep refrigerated:</b> Neurobion injections, Clexane/Arixtra injections, Centrum chewable, Caltrate chewable</div>
+            <div class="kv-line"><b>Room temperature:</b> everything else</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- DIET -->
+    <div class="panel" id="panel-diet">
+      <div class="wrap" style="padding:0;">
+        <section>
+          <div class="section-title">Today's meals</div>
+          <div class="card">
+            <div class="meal-input-row">
+              <select id="mealType" class="meal-select">
+                <option>Breakfast</option>
+                <option>Snack</option>
+                <option>Lunch</option>
+                <option>Dinner</option>
+                <option>Whey / protein</option>
+                <option>Other</option>
+              </select>
+              <input type="text" id="mealText" class="meal-text" placeholder="What did you have?">
+            </div>
+            <button class="qa-btn meal-add" id="mealAdd" style="width:100%;margin-top:8px;">Add to today's log</button>
+            <div id="mealLog" style="margin-top:4px;"></div>
+            <div class="empty-note" id="mealEmpty" style="display:none;">Nothing logged yet today.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Rules that apply every phase</div>
+          <div class="card">
+            <ul class="golden-list">
+              <li>Sip, don't gulp — max ~150 ml at a time, small sips over minutes, no straws</li>
+              <li>Chew until completely mashed before swallowing (aim for ~25 chews) once solids start</li>
+              <li>Leave at least 30 minutes between eating solids and drinking</li>
+              <li>Stop the moment you feel satisfied — don't push to "finish the portion"</li>
+              <li>Every waking hour: a 5-minute walk and 5 minutes of deep breathing, to protect against blood clots and chest complications</li>
+              <li>1.5–2 L fluids a day, spaced through the day, not with meals</li>
+              <li>No added sugar, caffeine, carbonation, alcohol, or citrus until your surgeon clears it</li>
+              <li>Small plates and spoons; light walking daily, easing into 20–30 min of light exercise from week 2</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title" id="dietWeekHeading">Diet by week</div>
+          <div id="weekAccordion"></div>
+        </section>
+
+        <section>
+          <div class="section-title">Fruit, in moderation (from week 6)</div>
+          <div class="card">
+            <div class="kv-line">Pick <b>one</b> group a day: 1 apple + 1 cup strawberries + 2 figs + 1 prickly pear <i>— or —</i> 1 apple + 1 kiwi + 3 cantaloupe slices + 2 pineapple slices <i>— or —</i> 4 small apricots + 1 peach + 1 persimmon + 1 orange <i>— or —</i> ½ cup pomegranate, grapes, pear or lychee.</div>
+            <div class="kv-line">Banana, mango and dates are allowed but small and occasional — half a banana, 3 tbsp mango, or 2 dates, not every day.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">After week 6 — weight-loss meals</div>
+          <div class="card">
+            <div class="kv-line">Starches are limited to <b>one small portion a day</b>, picking one option: 2 tbsp macaroni or rice with a stuffed vegetable · or 3 cups popcorn + 2 tbsp mashed potato + a little toast or wheat germ · or ⅓ cup corn + ⅓ cup peas + a small potato · or a quarter loaf of baladi bread or a mini bun + 2 tbsp oats, freekeh, bulgur or quinoa.</div>
+            <div class="kv-line">Keep avoiding white-flour products (fino, shami bread, pastries) day to day — protein and vegetables stay the bulk of every plate.</div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- LIQUIDS -->
+    <div class="panel" id="panel-liquids">
+      <div class="wrap" style="padding:0;">
+        <section>
+          <div class="section-title">Today</div>
+          <div class="card">
+            <div class="liquid-ring-wrap">
+              <div>
+                <div class="liquid-num"><span class="num" id="liqTodayVal2">0</span> ml <span style="font-size:15px;color:var(--ink-faint);">/ 1750</span></div>
+                <div class="liquid-goal">daily goal, 1.5–2 L</div>
+              </div>
+            </div>
+            <div class="bar-track"><div class="bar-fill" id="liqTodayBar2" style="width:0%"></div></div>
+            <div class="quick-add">
+              <button class="qa-btn" data-add="50">+50 ml sip</button>
+              <button class="qa-btn" data-add="100">+100 ml</button>
+              <button class="qa-btn" data-add="150">+150 ml</button>
+              <button class="qa-btn" data-add="180">+180 ml</button>
+              <button class="qa-btn" data-add="200">+200 ml</button>
+            </div>
+            <button class="reset-btn" id="resetLiquid">reset today's total</button>
+          </div>
+        </section>
+        <section>
+          <div class="section-title">How to drink this early on</div>
+          <div class="card">
+            <p class="sip-tip">Sip 30–150 ml at a time, roughly every 15–30 minutes rather than a large glass at once — big swallows stretch the new stomach and can bring on nausea or a dumping-syndrome-like reaction. Room-temperature liquids usually sit better than iced ones in week 1.</p>
+            <p class="sip-tip">If you're struggling to get enough in, Alexolyte (rehydration solution) sipped like juice through the day, half a cup morning and half at night, helps prevent the dizziness and low blood pressure that come with under-hydration.</p>
+            <p class="sip-tip">Warning signs of not drinking enough: dizziness, dry mouth, bad breath, headache, nausea, constipation, and dark urine. See the Guide tab if these show up.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- WEIGHT -->
+    <div class="panel" id="panel-weight">
+      <div class="wrap" style="padding:0;">
+        <section>
+          <div class="section-title">Log today's weight</div>
+          <div class="card">
+            <div class="weight-input-row">
+              <input type="number" id="weightInput" class="weight-input" step="0.1" min="30" max="300" inputmode="decimal" placeholder="e.g. 92.5">
+              <span class="weight-unit">kg</span>
+              <button class="qa-btn weight-save" id="weightSave">Save</button>
+            </div>
+            <div class="empty-note" id="weightSavedNote" style="display:none;">Saved for today — log again any time to update it.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Trend</div>
+          <div class="card">
+            <div class="stat-grid" id="weightStats"></div>
+            <div class="chart-wrap" id="weightChartWrap"></div>
+            <div class="sip-tip">Weigh in around the same time of day, roughly once a week, for the clearest trend — day-to-day weight bounces around with fluids and food volume, especially this early on.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">History</div>
+          <div class="card" id="weightHistory"></div>
+        </section>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="panel" id="panel-history">
+      <div class="wrap" style="padding:0;">
+        <section>
+          <div class="section-title">Goal streak</div>
+          <div class="card">
+            <div class="hist-summary" id="historySummary">—</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Day by day</div>
+          <div class="card" id="historyList"></div>
+        </section>
+
+        <section>
+          <div class="section-title">Photos &amp; notes</div>
+          <div class="card">
+            <input type="file" id="photoFile" accept="image/*" style="display:none;">
+            <button class="qa-btn" id="photoAddBtn" style="width:100%;">+ Add a photo</button>
+            <div id="photoCompose"></div>
+            <div class="photo-grid" id="photoGrid"></div>
+            <div class="empty-note" id="photoEmpty">No photos yet — useful for tracking wound healing or anything you want to show the clinic.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Share with your doctor</div>
+          <div class="card">
+            <p class="sip-tip">Puts together a text summary of the last two weeks — meds taken/missed, liquids, weight, pain levels, and any photo notes — to bring to your follow-up.</p>
+            <button class="qa-btn" id="exportBtn" style="width:100%;margin-top:4px;">Export summary</button>
+            <div class="export-fallback" id="exportFallback" hidden>
+              <div class="empty-note">Couldn't save directly — copied below instead, select all and copy:</div>
+              <textarea id="exportText" readonly></textarea>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- GUIDE -->
+    <div class="panel" id="panel-guide">
+      <div class="wrap" style="padding:0;">
+        <section>
+          <div class="section-title">Watch for</div>
+          <div class="card warn-card">
+            <div class="card-title">Dehydration</div>
+            <div class="kv-line">Signs: dark urine, dry mouth, dizziness, headache, dry/sagging skin.</div>
+            <div class="kv-line">Helps: steady small sips between meals rather than large amounts at once; less tea/coffee (they're diuretics).</div>
+          </div>
+          <div class="card warn-card">
+            <div class="card-title">Dumping syndrome</div>
+            <div class="kv-line">Usually settles within 12–18 months. Triggered by sugar (even honey or juice), drinking soon after eating, fatty food, or alcohol.</div>
+            <div class="kv-line"><b>Within 30 min:</b> cramping, bloating, nausea, vomiting, diarrhea, headache, fatigue, low blood pressure.</div>
+            <div class="kv-line"><b>1–3 hours later:</b> sweating, shakiness, confusion, sudden hunger.</div>
+            <div class="kv-line">If it happens: 1 tbsp honey/jam or ½ cup juice, then 15–30 min later a small protein + veg bite (e.g. cottage cheese with cucumber).</div>
+          </div>
+          <div class="card warn-card">
+            <div class="card-title">Vomiting</div>
+            <div class="kv-line">Usually from eating too fast, not chewing enough, or too much volume at once. Persistent trouble with one food (often chicken, red meat, rice, fatty food) may just mean set it aside and retry later.</div>
+          </div>
+          <div class="card warn-card">
+            <div class="card-title">Reflux / heartburn</div>
+            <div class="kv-line">Drink between meals, not with them. Don't lie down within 2 hours of eating; raise the head of the bed. Skip salty, fried, spicy, carbonated, or citrus foods and caffeine for now.</div>
+          </div>
+          <div class="card warn-card">
+            <div class="card-title">Constipation</div>
+            <div class="kv-line">Common early on from less movement and lower fluids/fibre. Helps: light walking, the full 1.5–2 L of fluids, fresh vegetables once they're allowed.</div>
+          </div>
+          <div class="card warn-card">
+            <div class="card-title">Hair thinning</div>
+            <div class="kv-line">Common after bariatric surgery from the nutrition shift — staying consistent with the vitamins and whey protein is the main defence. Worth a dermatology visit at the clinic if it's heavy.</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="call-box">
+            <div class="card-title">Contact the surgical team if</div>
+            <ul>
+              <li>Vomiting won't stop, or you can't keep fluids down at all</li>
+              <li>Fever, or spreading redness/pain at the wound sites</li>
+              <li>Severe or worsening abdominal pain</li>
+              <li>Very dark urine or no urination</li>
+              <li>Dehydration signs that don't improve after resting and sipping fluids</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Follow-up</div>
+          <div class="card">
+            <div class="kv-line"><b>Arab Contractors Medical Center</b> — follow-up at Dr. A's clinic.</div>
+            <div class="kv-line">Confirm the appointment at least 48 hours ahead: <b>23426000</b>. Bring a referral letter for an outside clinic visit.</div>
+            <div class="kv-line"><b>Sick leave:</b> 1 month from discharge (22 Sep).</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Labs</div>
+          <div class="card">
+            <div id="labList"></div>
+            <div class="lab-tests" style="margin-top:8px;">CBC · serum iron &amp; transferrin · calcium (total &amp; ionised) · urea &amp; creatinine · Mg &amp; Zn · vitamin B12 · vitamin D · albumin · PTH · RBS · SGPT</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title">Good to know</div>
+          <div class="card">
+            <div class="kv-line">Fertility can rise after bariatric surgery — your surgeon's guidance is a non-hormonal contraception method and avoiding pregnancy for a full year post-op.</div>
+            <div class="kv-line">A weight plateau lasting under 6 weeks is normal and expected to pass; if it runs past 6 weeks, that's worth a nutrition follow-up.</div>
+          </div>
+        </section>
+
+        <div class="disclaimer">This tracker organizes the instructions your surgical team and pharmacy already gave you — it isn't medical advice on its own. Always confirm timing or dose changes with your surgeon or pharmacist, especially around the medication switch-over points.</div>
+        <div class="source-note">Diet protocol: Dr. Ahmed El-Masry's post-sleeve nutrition guide · Meds: Capital Care Pharmacy</div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="tabs">
+    <div class="tabs-inner">
+      <button class="tab-btn active" data-tab="today">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
+        Today
+      </button>
+      <button class="tab-btn" data-tab="meds">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="7" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+        Meds
+      </button>
+      <button class="tab-btn" data-tab="diet">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v7a3 3 0 003 3v10M6 2v20M6 9H3M18 2c-2 2-2 5-2 8s0 3 2 3v9"/></svg>
+        Diet
+      </button>
+      <button class="tab-btn" data-tab="liquids">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 01-12 0c0-4.5 6-11 6-11z"/></svg>
+        Liquids
+      </button>
+      <button class="tab-btn" data-tab="weight">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 12a4 4 0 018 0"/><path d="M12 12V9"/></svg>
+        Weight
+      </button>
+      <button class="tab-btn" data-tab="history">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/><path d="M3.5 9A9 9 0 003 12"/></svg>
+        History
+      </button>
+      <button class="tab-btn" data-tab="guide">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+        Guide
+      </button>
+    </div>
+  </nav>
+</div>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Inter:wght@400;500;600;650;700&display=swap" rel="stylesheet">
+
+<script>
+(function(){
+  "use strict";
+
+  var SURGERY = new Date(2026,8,21); // Sep 21 2026 — day 1
+
+  function dateKey(d){ return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+  function addDays(d,n){ var r=new Date(d); r.setDate(r.getDate()+n); return r; }
+  function fmtShort(d){ return d.toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric"}); }
+  function fmtLong(d){ return d.toLocaleDateString(undefined,{month:"long",day:"numeric",year:"numeric"}); }
+
+  function postOpDay(now){
+    now = now || new Date();
+    var d0 = new Date(SURGERY.getFullYear(),SURGERY.getMonth(),SURGERY.getDate());
+    var d1 = new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    // Day 1 = the first full day after surgery (surgery day itself isn't a tracked day).
+    return Math.round((d1-d0)/86400000);
+  }
+
+  var today = new Date();
+  var DAY = postOpDay(today);
+
+  // ---------- storage helpers ----------
+  function safeGet(key, fallback){
+    try{ var v = localStorage.getItem(key); return v===null?fallback:JSON.parse(v); }catch(e){ return fallback; }
+  }
+  function safeSet(key, val){
+    try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
+  }
+
+  // ---------- medication data ----------
+  // startDay/endDay are post-op day numbers (day 1 = the first full day after surgery), inclusive
+  var MEDS = [
+    { id:"controloc", name:"Controloc 40mg", ar:"كونترولوك", time:"09:00", instr:"On an empty stomach", note:"Protects the stomach lining", startDay:1, endDay:1+90, fridge:false },
+    { id:"tavanic", name:"Tavanic", ar:"تافانيك", time:"10:00", instr:"After breakfast", note:"Antibiotic course", startDay:1, endDay:1+5-1, fridge:false },
+    { id:"clexane", name:"Arixtra or Clexane", ar:"أريكسترا / كليكسان", time:"12:00", instr:"Injection under the skin", note:"Blood thinner", startDay:1, endDay:1+6-1, fridge:true },
+    { id:"rivaro", name:"Rivarospire 10", ar:"ريفاروسباير", time:"12:00", instr:"Tablet, once Clexane course ends", note:"Continues blood-thinning", startDay:7, endDay:7+21-1, fridge:false },
+    { id:"centrum", name:"Centrum chewable ×2", ar:"سنتروم مضغ", time:"13:00", instr:"Chew two tablets", note:"Multivitamin", startDay:3, endDay:3+90, fridge:true },
+    { id:"ursofalk", name:"Ursofalk", ar:"أورسوفالك", time:"15:00", instr:"", note:"Gallstone prevention", startDay:3, endDay:3+180, fridge:false },
+    { id:"neurobion", name:"Neurobion injection", ar:"نيوروبيون", time:"17:00", instr:"Intramuscular", note:"Vitamin B — weekly for a month, then monthly", startDay:3, endDay:3+365, fridge:true, custom:"neurobion" },
+    { id:"caltrate", name:"Caltrate chewable", ar:"كالتريت", time:"21:00", instr:"Chew", note:"Calcium", startDay:3, endDay:3+90, fridge:true }
+  ];
+
+  var PRN = [
+    { name:"Panadol", ar:"بانادول", use:"Pain relief as needed, especially once the pain pump is removed." },
+    { name:"Picolax", ar:"بيكولاكس", use:"Laxative if no bowel movement by day 3 — 15 drops in half a cup of water." },
+    { name:"Alexolyte", ar:"أليكسوليت", use:"Rehydration solution, sipped like juice — half a cup morning and night if fluids feel short." },
+    { name:"Royal Tea", ar:"رويال تي", use:"Laxative tea, twice a day, any time." }
+  ];
+
+  function isNeurobionDay(day){
+    var weekly = [3,10,17,24];
+    if (weekly.indexOf(day) !== -1) return true;
+    if (day > 24){
+      var since = day - 24;
+      return since % 30 === 0;
+    }
+    return false;
+  }
+
+  function medActiveToday(m, day){
+    if (m.custom === "neurobion") return isNeurobionDay(day);
+    return day >= m.startDay && day <= m.endDay;
+  }
+
+  // ---------- diet weeks ----------
+  var WEEKS = [
+    {
+      key:"w1", range:"Days 1–7", title:"Clear liquids only",
+      groups:[
+        {label:"Drink", items:["Detox water","Juice diluted 50/50 with water","Strained chicken/veg broth","Herbal tea (chamomile, carob, fenugreek, mint, anise)","Plain or light tea","Decaf coffee","Sugar-free jelly"]}
+      ],
+      tips:["No pulp or fibre of any kind. Max ~150 ml per drink, sipped slowly. No straws, no fizzy drinks, no alcohol, no dairy yet, no citrus. Diet sugar is fine; skip white sugar and honey."]
+    },
+    {
+      key:"w2", range:"Days 8–14", title:"Add opaque liquids",
+      groups:[
+        {label:"Add these (2–5×/day), on top of 1.5 L clear liquids", items:["Fat-free milk or yogurt (no fruit pieces)","Fat-free cream, lactose-free or soy milk","Light lentil, tomato or broccoli soup","Low-fat cream of mushroom soup","Oat soup with milk","Light diet pudding","Strained vegetable juice"]}
+      ],
+      tips:["Portion ≤150 ml or half a soup bowl at a time. A meal can take 15–20 minutes — that's normal here."]
+    },
+    {
+      key:"w3", range:"Days 15–21", title:"Soft mashed protein begins",
+      groups:[
+        {label:"Well-mashed, soft", items:["Cottage or light cheese","Light fish, tuna, mackerel, mullet, salmon","Legumes, well mashed","Pureed fruit/veg (peach, apple, carrot)"]}
+      ],
+      tips:["Start whey protein twice daily on top of your other liquids — aim for at least 50g of whey protein a day from here on to protect muscle and hair. Chew everything to a mash before swallowing."]
+    },
+    {
+      key:"w4", range:"Days 22–28", title:"Soft mashed protein, expanded",
+      groups:[
+        {label:"Well-mashed, soft", items:["Cottage cheese","Egg","Light fish, tuna, salmon, mackerel","Liver","Mullet","Shrimp","Pureed fruit/veg"]}
+      ],
+      tips:["Same pace as week 3 — small bites, thorough chewing, 30 minutes between solids and liquids."]
+    },
+    {
+      key:"w5", range:"Days 29–35", title:"Soft mashed protein, full list",
+      groups:[
+        {label:"Meat", items:["Chicken","Rabbit","Duck","Turkey","Lean roast beef, sliced thin"]},
+        {label:"Legumes", items:["Fava beans","White/red kidney beans","Chickpeas","Lentils","Liver"]},
+        {label:"Fish", items:["Tuna","Salmon","Mackerel","Mullet","Boiled shrimp"]}
+      ],
+      tips:["Fluids matter more than ever here to avoid dehydration — drink between meals, not with them."]
+    },
+    {
+      key:"w6", range:"Days 36–49", title:"Introducing regular textures",
+      groups:[
+        {label:"Try, chewing very well", items:["Chicken, rabbit, duck, turkey (start minced, then whole)","Cold cuts, cold meat","Light hard cheese (cheddar, gouda, emmental)","Fresh vegetables and fruit"]}
+      ],
+      tips:["Skip luncheon meat or any processed minced meat — too much fat. This is also when fruit (see below) and the after-week-6 meal systems open up."]
+    }
+  ];
+
+  function currentWeekIndex(day){
+    if (day <= 6) return 0;
+    if (day <= 13) return 1;
+    if (day <= 20) return 2;
+    if (day <= 27) return 3;
+    if (day <= 34) return 4;
+    if (day <= 48) return 5;
+    return 6; // past the guide's week-by-week range
+  }
+
+  var PHASE_LABELS = [
+    "Week 1 — Clear liquids",
+    "Week 2 — Opaque liquids",
+    "Week 3 — Soft mashed protein",
+    "Week 4 — Soft mashed protein",
+    "Week 5 — Soft mashed protein",
+    "Week 6–7 — Regular textures",
+    "Maintenance — building toward regular meals"
+  ];
+
+  // ---------- render: header ----------
+  document.getElementById("dayNum").textContent = DAY;
+  document.getElementById("topDate").textContent = fmtShort(today);
+  var wIdx = currentWeekIndex(DAY);
+  document.getElementById("phasePill").textContent = PHASE_LABELS[wIdx];
+
+  // ---------- render: meds ----------
+  function medRowHTML(m, checked){
+    var tags = "";
+    if (m.fridge) tags += '<span class="tag fridge">fridge</span>';
+    if (m.custom !== "neurobion" && m.endDay - DAY <= 2 && m.endDay >= DAY) tags += '<span class="tag ends">ends day '+m.endDay+'</span>';
+    return (
+      '<div class="med-row'+(checked?' done':'')+'" data-id="'+m.id+'">'+
+        '<div class="med-time">'+to12(m.time)+'</div>'+
+        '<div class="med-main">'+
+          '<div class="med-name">'+m.name+'</div>'+
+          '<div class="med-ar">'+m.ar+'</div>'+
+          (m.instr ? '<div class="med-note">'+m.instr+' &middot; '+m.note+'</div>' : '<div class="med-note">'+m.note+'</div>')+
+          (tags ? '<div class="med-tags">'+tags+'</div>' : '')+
+        '</div>'+
+        '<button class="check'+(checked?' on':'')+'" data-id="'+m.id+'" aria-label="mark taken">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'+
+        '</button>'+
+      '</div>'
+    );
+  }
+  function to12(t){
+    var parts = t.split(":"); var h = parseInt(parts[0],10); var m = parts[1];
+    var ap = h>=12 ? "PM":"AM"; var hh = h%12; if(hh===0) hh=12;
+    return hh+":"+m+" "+ap;
+  }
+
+  var checkedMap = safeGet("meds_"+dateKey(today), {});
+
+  function renderTodayMeds(){
+    var active = MEDS.filter(function(m){ return medActiveToday(m, DAY); })
+                      .sort(function(a,b){ return a.time.localeCompare(b.time); });
+    var el = document.getElementById("todayMeds");
+    if (!active.length){ el.innerHTML = '<div class="empty-note">Nothing scheduled today.</div>'; return; }
+    el.innerHTML = active.map(function(m){ return medRowHTML(m, !!checkedMap[m.id]); }).join("");
+  }
+
+  function renderAllMeds(){
+    var sorted = MEDS.slice().sort(function(a,b){ return a.time.localeCompare(b.time); });
+    var el = document.getElementById("allMeds");
+    el.innerHTML = sorted.map(function(m){
+      var active = medActiveToday(m, DAY);
+      var row = medRowHTML(m, !!checkedMap[m.id]);
+      if (!active) row = row.replace('class="med-row', 'style="opacity:.5" class="med-row');
+      return row;
+    }).join("");
+  }
+
+  function renderPRN(){
+    var el = document.getElementById("prnMeds");
+    el.innerHTML = PRN.map(function(p){
+      return '<div class="kv-line"><b>'+p.name+'</b> <span style="color:var(--ink-faint);">('+p.ar+')</span> — '+p.use+'</div>';
+    }).join("");
+  }
+
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest(".check");
+    if (!btn) return;
+    var id = btn.getAttribute("data-id");
+    checkedMap[id] = !checkedMap[id];
+    safeSet("meds_"+dateKey(today), checkedMap);
+    renderTodayMeds();
+    renderAllMeds();
+    renderHistory();
+    pushDay(dateKey(today));
+    renderDueBanner();
+  });
+
+  renderTodayMeds();
+  renderAllMeds();
+  renderPRN();
+
+  // ---------- render: today phase card ----------
+  (function(){
+    var w = WEEKS[Math.min(wIdx, WEEKS.length-1)];
+    var el = document.getElementById("todayPhaseCard");
+    if (!w){ el.innerHTML = '<div class="empty-note">You are past the week-by-week guide — see the Diet tab for ongoing meal systems.</div>'; return; }
+    var html = '<div class="card-title">'+w.title+'</div>';
+    w.groups.forEach(function(g){
+      html += '<div class="food-group"><div class="food-group-label">'+g.label+'</div><div class="chip-row">'+g.items.map(function(i){return '<span class="chip">'+i+'</span>';}).join("")+'</div></div>';
+    });
+    html += '<div class="week-tip">'+w.tips.join(" ")+'</div>';
+    el.innerHTML = html;
+  })();
+
+  // ---------- render: diet accordion ----------
+  (function(){
+    var el = document.getElementById("weekAccordion");
+    el.innerHTML = WEEKS.map(function(w, i){
+      var isCurrent = i === wIdx;
+      var groupsHTML = w.groups.map(function(g){
+        return '<div class="food-group"><div class="food-group-label">'+g.label+'</div><div class="chip-row">'+g.items.map(function(it){return '<span class="chip">'+it+'</span>';}).join("")+'</div></div>';
+      }).join("");
+      return (
+        '<div class="week-card'+(isCurrent?' current open':'')+'" data-key="'+w.key+'">'+
+          '<button class="week-head">'+
+            '<div class="week-head-left"><div class="week-range">'+w.range+'</div><div class="week-title">'+w.title+'</div></div>'+
+            (isCurrent ? '<span class="week-now-badge">now</span>' : '')+
+            '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'+
+          '</button>'+
+          '<div class="week-body">'+groupsHTML+'<div class="week-tip">'+w.tips.join(" ")+'</div></div>'+
+        '</div>'
+      );
+    }).join("");
+
+    el.querySelectorAll(".week-head").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        btn.closest(".week-card").classList.toggle("open");
+      });
+    });
+  })();
+
+  // ---------- render: liquids ----------
+  var LIQ_GOAL = 1750;
+  function liqKey(){ return "liquid_"+dateKey(today); }
+  function getLiq(){ var v = safeGet(liqKey(), 0); return (typeof v === "number" && !isNaN(v)) ? v : 0; }
+  function setLiq(v){ safeSet(liqKey(), v); renderLiquids(); renderHistory(); pushDay(dateKey(today)); }
+  function renderLiquids(){
+    var v = getLiq();
+    var pct = Math.max(0, Math.min(100, Math.round(v/LIQ_GOAL*100)));
+    ["liqTodayVal","liqTodayVal2"].forEach(function(id){ var e=document.getElementById(id); if(e) e.textContent = v; });
+    ["liqTodayBar","liqTodayBar2"].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.width = pct+"%"; });
+  }
+  document.querySelectorAll(".qa-btn[data-add]").forEach(function(b){
+    b.addEventListener("click", function(){ setLiq(getLiq() + parseInt(b.getAttribute("data-add"),10)); });
+  });
+  var resetBtn = document.getElementById("resetLiquid");
+  if (resetBtn) resetBtn.addEventListener("click", function(){ setLiq(0); });
+  renderLiquids();
+
+  // ---------- render: movement (hourly walk + breathing) ----------
+  function walkKey(){ return "walk_"+dateKey(today); }
+  function breathKey(){ return "breath_"+dateKey(today); }
+  function renderMovement(){
+    document.getElementById("walkCount").textContent = safeGet(walkKey(), 0);
+    document.getElementById("breathCount").textContent = safeGet(breathKey(), 0);
+  }
+  var walkBtn = document.getElementById("walkAdd");
+  if (walkBtn) walkBtn.addEventListener("click", function(){ safeSet(walkKey(), safeGet(walkKey(),0)+1); renderMovement(); renderHistory(); pushDay(dateKey(today)); });
+  var breathBtn = document.getElementById("breathAdd");
+  if (breathBtn) breathBtn.addEventListener("click", function(){ safeSet(breathKey(), safeGet(breathKey(),0)+1); renderMovement(); renderHistory(); pushDay(dateKey(today)); });
+  var resetMoveBtn = document.getElementById("resetMovement");
+  if (resetMoveBtn) resetMoveBtn.addEventListener("click", function(){ safeSet(walkKey(),0); safeSet(breathKey(),0); renderMovement(); renderHistory(); pushDay(dateKey(today)); });
+  renderMovement();
+
+  // ---------- render: pain tracker ----------
+  function painKey(){ return "pain_"+dateKey(today); }
+  function painBand(level){ return level<=3 ? "low" : (level<=6 ? "mid" : "high"); }
+  function fmtTime(d){ return d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}); }
+
+  (function(){
+    var scaleEl = document.getElementById("painScale");
+    var html = "";
+    for (var i=0;i<=10;i++){
+      html += '<button class="pain-btn '+painBand(i)+'" data-level="'+i+'">'+i+'</button>';
+    }
+    scaleEl.innerHTML = html;
+  })();
+
+  function renderPain(){
+    var entries = safeGet(painKey(), []);
+    var logEl = document.getElementById("painLog");
+    var lastEl = document.getElementById("painLast");
+    if (!entries.length){
+      logEl.innerHTML = "";
+      lastEl.textContent = "No reading logged yet today";
+      return;
+    }
+    var last = entries[entries.length-1];
+    lastEl.innerHTML = 'Last logged <b>'+last.time+'</b> &middot; level <b>'+last.level+'</b>';
+    var rows = entries.slice().reverse().map(function(e, revIdx){
+      var idx = entries.length - 1 - revIdx;
+      return '<div class="pain-entry"><i class="dot '+painBand(e.level)+'"></i><span class="lvl">'+e.level+'</span><span class="time">'+e.time+'</span><button class="pain-del" data-idx="'+idx+'" aria-label="remove">&times;</button></div>';
+    });
+    logEl.innerHTML = rows.join("");
+  }
+
+  document.getElementById("painScale").addEventListener("click", function(e){
+    var btn = e.target.closest(".pain-btn");
+    if (!btn) return;
+    var entries = safeGet(painKey(), []);
+    entries.push({ level: parseInt(btn.getAttribute("data-level"),10), time: fmtTime(new Date()) });
+    safeSet(painKey(), entries);
+    renderPain();
+    pushDay(dateKey(today));
+  });
+
+  document.getElementById("painLog").addEventListener("click", function(e){
+    var del = e.target.closest(".pain-del");
+    if (!del) return;
+    var entries = safeGet(painKey(), []);
+    entries.splice(parseInt(del.getAttribute("data-idx"),10), 1);
+    safeSet(painKey(), entries);
+    renderPain();
+    pushDay(dateKey(today));
+  });
+
+  var resetPainBtn = document.getElementById("resetPain");
+  if (resetPainBtn) resetPainBtn.addEventListener("click", function(){ safeSet(painKey(), []); renderPain(); pushDay(dateKey(today)); });
+
+  renderPain();
+
+  // ---------- render: meal log ----------
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+  function mealKey(){ return "meals_"+dateKey(today); }
+  function renderMealLog(){
+    var entries = safeGet(mealKey(), []);
+    var el = document.getElementById("mealLog");
+    var emptyEl = document.getElementById("mealEmpty");
+    if (!el) return;
+    if (!entries.length){ el.innerHTML = ""; if (emptyEl) emptyEl.style.display = "block"; return; }
+    if (emptyEl) emptyEl.style.display = "none";
+    var rows = entries.slice().reverse().map(function(e, revIdx){
+      var idx = entries.length-1-revIdx;
+      return '<div class="meal-entry"><span class="meal-time">'+e.time+'</span>'+
+        '<span class="meal-type-badge">'+escapeHtml(e.type)+'</span>'+
+        '<span class="meal-desc">'+escapeHtml(e.text)+'</span>'+
+        '<button class="meal-del" data-idx="'+idx+'" aria-label="remove">&times;</button></div>';
+    });
+    el.innerHTML = rows.join("");
+  }
+  (function(){
+    var addBtn = document.getElementById("mealAdd");
+    var typeEl = document.getElementById("mealType");
+    var textEl = document.getElementById("mealText");
+    if (!addBtn) return;
+    function addMeal(){
+      var text = textEl.value.trim();
+      if (!text) return;
+      var entries = safeGet(mealKey(), []);
+      entries.push({ time: fmtTime(new Date()), type: typeEl.value, text: text });
+      safeSet(mealKey(), entries);
+      textEl.value = "";
+      renderMealLog();
+      pushDay(dateKey(today));
+    }
+    addBtn.addEventListener("click", addMeal);
+    textEl.addEventListener("keydown", function(e){ if (e.key === "Enter"){ e.preventDefault(); addMeal(); } });
+    document.getElementById("mealLog").addEventListener("click", function(e){
+      var del = e.target.closest(".meal-del");
+      if (!del) return;
+      var entries = safeGet(mealKey(), []);
+      entries.splice(parseInt(del.getAttribute("data-idx"),10), 1);
+      safeSet(mealKey(), entries);
+      renderMealLog();
+      pushDay(dateKey(today));
+    });
+  })();
+  renderMealLog();
+
+  // ---------- render: weight tracker ----------
+  function weightLogKey(){ return "weight_log"; }
+  function fmtDateShort(d){ return d.toLocaleDateString(undefined,{month:"short",day:"numeric"}); }
+
+  function renderWeightStats(log){
+    var el = document.getElementById("weightStats");
+    if (!log.length){
+      el.innerHTML = '<div class="empty-note" style="grid-column:1/-1;">No readings yet — log one above to start your trend.</div>';
+      return;
+    }
+    var first = log[0], last = log[log.length-1];
+    var change = last.value - first.value;
+    var changeStr = (change>0?"+":"") + change.toFixed(1) + " kg";
+    el.innerHTML =
+      '<div class="stat-tile"><div class="stat-value num">'+first.value+'</div><div class="stat-label">start &middot; '+fmtDateShort(new Date(first.ts))+'</div></div>'+
+      '<div class="stat-tile"><div class="stat-value num">'+last.value+'</div><div class="stat-label">latest &middot; '+fmtDateShort(new Date(last.ts))+'</div></div>'+
+      '<div class="stat-tile"><div class="stat-value num">'+changeStr+'</div><div class="stat-label">since start</div></div>';
+  }
+
+  function renderWeightChart(log){
+    var wrap = document.getElementById("weightChartWrap");
+    if (log.length < 2){
+      wrap.innerHTML = '<div class="empty-note">Log a couple more readings to see your trend line.</div>';
+      return;
+    }
+    var W=320, H=150, x0=12, x1=308, yTop=30, yBot=116;
+    var xs = log.map(function(e){ return e.ts; });
+    var vs = log.map(function(e){ return e.value; });
+    var xmin = xs[0], xmax = xs[xs.length-1];
+    var vmin = Math.min.apply(null, vs), vmax = Math.max.apply(null, vs);
+    var pad = Math.max(0.6, (vmax-vmin)*0.25);
+    vmin -= pad; vmax += pad;
+    function mapX(ts){ return xmax===xmin ? (x0+x1)/2 : x0 + (ts-xmin)/(xmax-xmin)*(x1-x0); }
+    function mapY(v){ return yBot - (v-vmin)/(vmax-vmin)*(yBot-yTop); }
+    var pts = log.map(function(e){ return mapX(e.ts).toFixed(1)+","+mapY(e.value).toFixed(1); });
+    var linePath = "M"+pts.join(" L");
+    var areaPath = linePath+" L"+mapX(xmax).toFixed(1)+","+yBot+" L"+mapX(xmin).toFixed(1)+","+yBot+" Z";
+    var first = log[0], last = log[log.length-1];
+
+    wrap.innerHTML =
+      '<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+
+        '<path class="chart-area" d="'+areaPath+'"/>'+
+        '<path class="chart-line" d="'+linePath+'"/>'+
+        '<circle class="chart-dot-start" cx="'+mapX(first.ts).toFixed(1)+'" cy="'+mapY(first.value).toFixed(1)+'" r="2.6"/>'+
+        '<circle class="chart-dot" cx="'+mapX(last.ts).toFixed(1)+'" cy="'+mapY(last.value).toFixed(1)+'" r="3.4"/>'+
+        '<text class="chart-value" x="'+mapX(last.ts).toFixed(1)+'" y="'+(mapY(last.value)-9).toFixed(1)+'" text-anchor="end">'+last.value+' kg</text>'+
+        '<text class="chart-label" x="'+mapX(first.ts).toFixed(1)+'" y="'+(mapY(first.value)-8).toFixed(1)+'" text-anchor="start">'+first.value+' kg</text>'+
+        '<text class="chart-label" x="'+mapX(first.ts).toFixed(1)+'" y="'+(H-6)+'" text-anchor="start">'+fmtDateShort(new Date(first.ts))+'</text>'+
+        '<text class="chart-label" x="'+mapX(last.ts).toFixed(1)+'" y="'+(H-6)+'" text-anchor="end">'+fmtDateShort(new Date(last.ts))+'</text>'+
+      '</svg>';
+  }
+
+  function renderWeightHistory(log){
+    var el = document.getElementById("weightHistory");
+    if (!log.length){ el.innerHTML = '<div class="empty-note">Nothing logged yet.</div>'; return; }
+    var rows = log.slice().reverse().map(function(e, revIdx){
+      var idx = log.length-1-revIdx;
+      var prev = log[idx-1];
+      var delta = prev ? (e.value-prev.value) : null;
+      var deltaStr = delta===null ? "" : (delta===0 ? "no change" : (delta>0?"+":"")+delta.toFixed(1)+" kg");
+      return '<div class="pain-entry"><span class="time" style="flex:1;">'+fmtDateShort(new Date(e.ts))+'</span>'+
+        '<span class="lvl" style="width:auto;font-weight:700;">'+e.value+' kg</span>'+
+        '<span style="width:74px;text-align:right;color:var(--ink-faint);font-size:11.5px;">'+deltaStr+'</span>'+
+        '<button class="pain-del" data-k="'+e.k+'" aria-label="remove">&times;</button></div>';
+    });
+    el.innerHTML = rows.join("");
+  }
+
+  function renderWeightAll(){
+    var log = safeGet(weightLogKey(), []);
+    renderWeightStats(log);
+    renderWeightChart(log);
+    renderWeightHistory(log);
+  }
+
+  (function(){
+    var log = safeGet(weightLogKey(), []);
+    var k = dateKey(today);
+    var input = document.getElementById("weightInput");
+    var existing = null;
+    for (var i=0;i<log.length;i++){ if (log[i].k===k){ existing = log[i]; break; } }
+    if (existing && input) input.value = existing.value;
+
+    var saveBtn = document.getElementById("weightSave");
+    if (saveBtn) saveBtn.addEventListener("click", function(){
+      var val = parseFloat(input.value);
+      if (!val || val<=0) return;
+      var l = safeGet(weightLogKey(), []);
+      var ts = new Date(today.getFullYear(),today.getMonth(),today.getDate()).getTime();
+      var idx = -1;
+      for (var j=0;j<l.length;j++){ if (l[j].k===k){ idx=j; break; } }
+      if (idx>=0) l[idx].value = val; else l.push({k:k, ts:ts, value:val});
+      l.sort(function(a,b){ return a.ts-b.ts; });
+      safeSet(weightLogKey(), l);
+      document.getElementById("weightSavedNote").style.display = "block";
+      renderWeightAll();
+      pushWeight(k, val, ts);
+    });
+
+    var histEl = document.getElementById("weightHistory");
+    if (histEl) histEl.addEventListener("click", function(e){
+      var del = e.target.closest(".pain-del");
+      if (!del) return;
+      var kk = del.getAttribute("data-k");
+      var l = safeGet(weightLogKey(), []).filter(function(en){ return en.k !== kk; });
+      safeSet(weightLogKey(), l);
+      renderWeightAll();
+      deleteWeightCloud(kk);
+    });
+  })();
+
+  renderWeightAll();
+
+  // ---------- render: labs ----------
+  (function(){
+    var d3 = addDays(SURGERY, 90);
+    var d6 = addDays(SURGERY, 182);
+    var d12 = addDays(SURGERY, 365);
+    var rows = [
+      {name:"3-month labs", date:d3},
+      {name:"6-month labs", date:d6},
+      {name:"1-year labs", date:d12}
+    ];
+    document.getElementById("labList").innerHTML = rows.map(function(r){
+      return '<div class="lab-row"><div class="lab-name">'+r.name+'</div><div class="lab-date">'+fmtLong(r.date)+'</div></div>';
+    }).join("");
+  })();
+
+  // ---------- render: history ----------
+  function dayInfo(n){
+    var d = addDays(SURGERY, n);
+    var key = dateKey(d);
+    var liq = safeGet("liquid_"+key, 0);
+    if (typeof liq !== "number" || isNaN(liq)) liq = 0;
+    var walk = safeGet("walk_"+key, 0);
+    var breath = safeGet("breath_"+key, 0);
+    var checked = safeGet("meds_"+key, {});
+    var activeMeds = MEDS.filter(function(m){ return medActiveToday(m, n); });
+    var takenCount = activeMeds.filter(function(m){ return !!checked[m.id]; }).length;
+    return { day:n, date:d, liq:liq, walk:walk, breath:breath, medsTaken:takenCount, medsTotal:activeMeds.length };
+  }
+  function renderHistory(){
+    var listEl = document.getElementById("historyList");
+    var summaryEl = document.getElementById("historySummary");
+    if (!listEl) return;
+    var rows = [];
+    for (var n = DAY; n >= 1; n--){ rows.push(dayInfo(n)); }
+    var hitCount = rows.filter(function(r){ return r.liq >= LIQ_GOAL; }).length;
+    if (summaryEl){
+      summaryEl.textContent = hitCount + " of " + rows.length + " day" + (rows.length===1?"":"s") + " you hit the " + LIQ_GOAL + " ml liquid goal so far.";
+    }
+    if (!rows.length){ listEl.innerHTML = '<div class="empty-note">Nothing logged yet.</div>'; return; }
+    listEl.innerHTML = rows.map(function(r){
+      var hit = r.liq >= LIQ_GOAL;
+      return '<div class="hist-row">'+
+        '<div class="hist-date"><b>Day '+r.day+'</b><span>'+fmtDateShort(r.date)+'</span></div>'+
+        '<div class="hist-stats">'+
+          '<span class="hist-stat'+(hit?' good':'')+'">'+r.liq+' / '+LIQ_GOAL+' ml</span>'+
+          '<span class="hist-stat">'+r.walk+' walks</span>'+
+          '<span class="hist-stat">'+r.breath+' breathing</span>'+
+          '<span class="hist-stat">'+r.medsTaken+'/'+r.medsTotal+' meds</span>'+
+        '</div>'+
+      '</div>';
+    }).join("");
+  }
+  renderHistory();
+
+  // ---------- tabs ----------
+  function goToTab(name){
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("active"); });
+    document.getElementById("panel-"+name).classList.add("active");
+    document.querySelectorAll(".tab-btn").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-tab")===name); });
+    window.scrollTo({top:0, behavior:"instant"});
+  }
+  window.goToTab = goToTab;
+  document.querySelectorAll(".tab-btn").forEach(function(b){
+    b.addEventListener("click", function(){ goToTab(b.getAttribute("data-tab")); });
+  });
+
+  // ================= CLOUD SYNC (db / assets / downloads) =================
+  // Local storage stays the source of truth for rendering (nothing above this
+  // line changes). This layer hydrates localStorage from the cloud on load
+  // (so a phone log shows up on a laptop) and mirrors every mutation back up.
+  var cloud = { db:null, assets:null, downloads:null };
+  var writeQueues = {};
+  function queueWrite(path, fn){
+    var prev = writeQueues[path] || Promise.resolve();
+    var next = prev.then(fn, fn).catch(function(e){ console.error("cloud write failed:", path, e); });
+    writeQueues[path] = next;
+    return next;
+  }
+  function numOr(v, fallback){ return (typeof v === "number" && !isNaN(v)) ? v : fallback; }
+
+  function dayFieldsFromLocal(key){
+    return {
+      liquidMl: numOr(safeGet("liquid_"+key, 0), 0),
+      walk: numOr(safeGet("walk_"+key, 0), 0),
+      breath: numOr(safeGet("breath_"+key, 0), 0),
+      medsChecked: safeGet("meds_"+key, {}),
+      pain: safeGet("pain_"+key, []),
+      meals: safeGet("meals_"+key, [])
+    };
+  }
+  function applyDayFieldsToLocal(key, d){
+    safeSet("liquid_"+key, numOr(d.liquidMl, 0));
+    safeSet("walk_"+key, numOr(d.walk, 0));
+    safeSet("breath_"+key, numOr(d.breath, 0));
+    safeSet("meds_"+key, d.medsChecked || {});
+    safeSet("pain_"+key, d.pain || []);
+    safeSet("meals_"+key, d.meals || []);
+  }
+  function hasAnyLocalSignal(key){
+    var d = dayFieldsFromLocal(key);
+    return d.liquidMl>0 || d.walk>0 || d.breath>0 || Object.keys(d.medsChecked||{}).length>0 || (d.pain||[]).length>0 || (d.meals||[]).length>0;
+  }
+  function pushDay(key){
+    if (!cloud.db) return;
+    var data = dayFieldsFromLocal(key);
+    queueWrite("days/"+key, function(){ return cloud.db.doc("days/"+key).set(data); });
+  }
+
+  var cloudDayMap = {}; // dateKey -> fields, populated after a cloud pull; History reads this when cloud is on
+  function pullAllDays(){
+    if (!cloud.db) return Promise.resolve();
+    return cloud.db.collection("days").get().then(function(snap){
+      snap.docs.forEach(function(d){
+        cloudDayMap[d.id] = d.data();
+        applyDayFieldsToLocal(d.id, d.data());
+      });
+    }).catch(function(e){ console.error("pullAllDays failed", e); });
+  }
+  function migrateLocalDaysToCloud(){
+    if (!cloud.db) return Promise.resolve();
+    var jobs = [];
+    for (var n = 1; n <= DAY; n++){
+      var key = dateKey(addDays(SURGERY, n));
+      if (!cloudDayMap[key] && hasAnyLocalSignal(key)) jobs.push(pushDay(key));
+    }
+    return Promise.all(jobs);
+  }
+
+  function pushWeight(key, value, ts){
+    if (!cloud.db) return;
+    queueWrite("weights/"+key, function(){ return cloud.db.doc("weights/"+key).set({ value: value, ts: ts }); });
+  }
+  function deleteWeightCloud(key){
+    if (!cloud.db) return;
+    queueWrite("weights/"+key, function(){ return cloud.db.doc("weights/"+key).delete(); });
+  }
+  function pullWeights(){
+    if (!cloud.db) return Promise.resolve(null);
+    return cloud.db.collection("weights").get().then(function(snap){
+      var log = snap.docs.map(function(d){ var v=d.data(); return { k:d.id, ts:v.ts, value:v.value }; });
+      log.sort(function(a,b){ return a.ts-b.ts; });
+      return log;
+    }).catch(function(e){ console.error("pullWeights failed", e); return null; });
+  }
+  function migrateLocalWeightsToCloud(){
+    if (!cloud.db) return Promise.resolve();
+    var l = safeGet("weight_log", []);
+    return Promise.all(l.map(function(e){ return pushWeight(e.k, e.value, e.ts); }));
+  }
+
+  function settingsRef(){ return cloud.db.doc("settings/prefs"); }
+  function pullSettings(){
+    if (!cloud.db) return Promise.resolve(null);
+    return settingsRef().get().then(function(snap){ return snap.exists ? snap.data() : null; }).catch(function(){ return null; });
+  }
+  function pushSettings(obj){
+    if (!cloud.db) return;
+    queueWrite("settings/prefs", function(){ return settingsRef().set(obj); });
+  }
+
+  function hydrateFromCloud(){
+    return pullAllDays()
+      .then(migrateLocalDaysToCloud)
+      .then(pullWeights)
+      .then(function(cloudLog){
+        if (cloudLog && cloudLog.length){ safeSet("weight_log", cloudLog); return; }
+        return migrateLocalWeightsToCloud();
+      })
+      .then(pullSettings)
+      .then(function(settings){
+        if (settings && typeof settings.remindersEnabled === "boolean"){
+          remindersEnabled = settings.remindersEnabled;
+          var t = document.getElementById("remindersToggle");
+          if (t) t.checked = remindersEnabled;
+        }
+      })
+      .then(function(){
+        checkedMap = safeGet("meds_"+dateKey(today), {});
+        renderTodayMeds();
+        renderAllMeds();
+        renderLiquids();
+        renderMovement();
+        renderPain();
+        renderMealLog();
+        renderWeightAll();
+        renderHistory();
+        renderDueBanner();
+      })
+      .catch(function(e){ console.error("hydrateFromCloud failed", e); });
+  }
+
+  // ================= DUE-NOW BANNER (no permissions needed) =================
+  function nowHHMM(){ var d=new Date(); return (d.getHours()<10?"0":"")+d.getHours()+":"+(d.getMinutes()<10?"0":"")+d.getMinutes(); }
+  function overdueMedsToday(){
+    var now = nowHHMM();
+    var checked = safeGet("meds_"+dateKey(today), {});
+    return MEDS.filter(function(m){ return medActiveToday(m, DAY); })
+      .filter(function(m){ return !checked[m.id] && m.time <= now; })
+      .sort(function(a,b){ return a.time.localeCompare(b.time); });
+  }
+  function renderDueBanner(){
+    var section = document.getElementById("dueSection");
+    var list = document.getElementById("dueList");
+    if (!section || !list) return;
+    var due = overdueMedsToday();
+    if (!due.length){ section.hidden = true; list.innerHTML = ""; return; }
+    section.hidden = false;
+    list.innerHTML = due.map(function(m){
+      return '<div class="due-row">'+
+        '<button class="check" data-id="'+m.id+'" aria-label="mark taken">'+
+          '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'+
+        '</button>'+
+        '<span class="med-name">'+m.name+'</span>'+
+        '<span class="med-time">'+to12(m.time)+'</span>'+
+      '</div>';
+    }).join("");
+  }
+  renderDueBanner();
+
+  // ================= REMINDERS (browser notifications, best effort) =================
+  var remindersEnabled = safeGet("remindersEnabled", false);
+  var notifiedToday = {};
+  (function(){
+    var t = document.getElementById("remindersToggle");
+    if (!t) return;
+    t.checked = remindersEnabled;
+    t.addEventListener("change", function(){
+      remindersEnabled = t.checked;
+      safeSet("remindersEnabled", remindersEnabled);
+      pushSettings({ remindersEnabled: remindersEnabled });
+      var note = document.getElementById("reminderNote");
+      if (remindersEnabled && "Notification" in window){
+        try{
+          Notification.requestPermission().then(function(perm){
+            if (perm !== "granted" && note) note.textContent = "Browser alerts weren't allowed — the \"Due now\" list on the Today tab still works without them.";
+          }).catch(function(){});
+        }catch(e){}
+      }
+    });
+  })();
+  function reminderTick(){
+    renderDueBanner();
+    if (!remindersEnabled) return;
+    if (!("Notification" in window) || Notification.permission !== "granted") return;
+    var key = dateKey(today);
+    overdueMedsToday().forEach(function(m){
+      var flag = key+"_"+m.id;
+      if (notifiedToday[flag]) return;
+      notifiedToday[flag] = true;
+      try{ new Notification("Time for "+m.name, { body: m.instr || m.note, tag: flag }); }catch(e){}
+    });
+  }
+  setInterval(reminderTick, 60000);
+
+  // ================= PHOTOS & NOTES =================
+  var pendingPhotoFile = null;
+  var photoCache = [];
+  function photoDataUrl(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  function renderPhotoCompose(previewUrl){
+    var el = document.getElementById("photoCompose");
+    if (!el) return;
+    if (!previewUrl){ el.innerHTML = ""; return; }
+    el.innerHTML =
+      '<div class="photo-compose">'+
+        '<img src="'+previewUrl+'" alt="">'+
+        '<input type="text" class="photo-note-input" id="photoNoteInput" placeholder="Note (e.g. wound day 7, looks fine)">'+
+        '<div class="photo-compose-btns">'+
+          '<button class="photo-cancel" id="photoCancelBtn" type="button">Cancel</button>'+
+          '<button class="photo-save" id="photoSaveBtn" type="button">Save photo</button>'+
+        '</div>'+
+      '</div>';
+    var cancelBtn = document.getElementById("photoCancelBtn");
+    var saveBtn = document.getElementById("photoSaveBtn");
+    if (cancelBtn) cancelBtn.addEventListener("click", function(){ pendingPhotoFile=null; renderPhotoCompose(null); });
+    if (saveBtn) saveBtn.addEventListener("click", function(){
+      var noteEl = document.getElementById("photoNoteInput");
+      savePhoto(pendingPhotoFile, noteEl ? noteEl.value.trim() : "");
+    });
+  }
+  function savePhoto(file, note){
+    if (!file) return;
+    if (!cloud.db || !cloud.assets){ alert("Photo storage needs cloud sync, which isn't available in this view."); return; }
+    var saveBtn = document.getElementById("photoSaveBtn");
+    if (saveBtn){ saveBtn.disabled = true; saveBtn.textContent = "Saving…"; }
+    cloud.assets.upload(file).then(function(up){
+      return cloud.db.collection("photos").add({ dateKey: dateKey(today), ts: Date.now(), note: note||"", assetId: up.id });
+    }).then(function(){
+      pendingPhotoFile = null;
+      renderPhotoCompose(null);
+      return loadAndRenderPhotos();
+    }).catch(function(e){
+      console.error("photo save failed", e);
+      alert("Couldn't save that photo — try again in a moment.");
+      if (saveBtn){ saveBtn.disabled = false; saveBtn.textContent = "Save photo"; }
+    });
+  }
+  function renderPhotoGrid(photos){
+    var grid = document.getElementById("photoGrid");
+    var empty = document.getElementById("photoEmpty");
+    if (!grid) return;
+    if (!photos.length){ grid.innerHTML = ""; if (empty) empty.style.display = "block"; return; }
+    if (empty) empty.style.display = "none";
+    grid.innerHTML = photos.map(function(p){
+      return '<div class="photo-tile">'+
+        '<img src="/_blob/'+p.assetId+'" alt="'+escapeHtml(p.note||"")+'" loading="lazy">'+
+        '<button class="photo-del" data-id="'+p.id+'" data-asset="'+p.assetId+'" aria-label="delete">&times;</button>'+
+        '<div class="photo-date">'+fmtDateShort(new Date(p.ts))+(p.note ? " · "+escapeHtml(p.note) : "")+'</div>'+
+      '</div>';
+    }).join("");
+  }
+  function loadAndRenderPhotos(){
+    if (!cloud.db) return Promise.resolve();
+    return cloud.db.collection("photos").orderBy("ts","desc").get().then(function(snap){
+      photoCache = snap.docs.map(function(d){ var v = d.data(); v.id = d.id; return v; });
+      renderPhotoGrid(photoCache);
+    }).catch(function(e){ console.error("loadAndRenderPhotos failed", e); });
+  }
+  (function(){
+    var addBtn = document.getElementById("photoAddBtn");
+    var fileInput = document.getElementById("photoFile");
+    if (!addBtn || !fileInput) return;
+    addBtn.addEventListener("click", function(){
+      if (!cloud.db || !cloud.assets){ alert("Photo storage needs cloud sync, which isn't available in this view."); return; }
+      fileInput.click();
+    });
+    fileInput.addEventListener("change", function(){
+      var file = fileInput.files && fileInput.files[0];
+      fileInput.value = "";
+      if (!file) return;
+      pendingPhotoFile = file;
+      photoDataUrl(file).then(renderPhotoCompose);
+    });
+    var grid = document.getElementById("photoGrid");
+    if (grid) grid.addEventListener("click", function(e){
+      var del = e.target.closest(".photo-del");
+      if (!del || !cloud.db) return;
+      var id = del.getAttribute("data-id");
+      var assetId = del.getAttribute("data-asset");
+      cloud.db.doc("photos/"+id).delete().then(function(){
+        if (cloud.assets && assetId) cloud.assets.delete(assetId).catch(function(){});
+        return loadAndRenderPhotos();
+      }).catch(function(e2){ console.error("photo delete failed", e2); });
+    });
+  })();
+
+  // ================= DOCTOR EXPORT =================
+  function dayFieldsFor(n){
+    var key = dateKey(addDays(SURGERY, n));
+    return cloudDayMap[key] || dayFieldsFromLocal(key);
+  }
+  function buildExportText(){
+    var lines = [];
+    lines.push("RECOVERY SUMMARY");
+    lines.push("Gastric sleeve surgery: " + fmtLong(SURGERY));
+    lines.push("Report generated: " + fmtLong(new Date()) + " — Day " + DAY);
+    lines.push("");
+    var from = Math.max(1, DAY-13);
+    lines.push("MEDICATIONS — last " + (DAY-from+1) + " days");
+    for (var n=from; n<=DAY; n++){
+      var info = dayFieldsFor(n);
+      var active = MEDS.filter(function(m){ return medActiveToday(m, n); });
+      var taken = active.filter(function(m){ return !!(info.medsChecked||{})[m.id]; }).map(function(m){ return m.name; });
+      var missed = active.filter(function(m){ return !(info.medsChecked||{})[m.id]; }).map(function(m){ return m.name; });
+      lines.push("Day "+n+" ("+fmtDateShort(addDays(SURGERY,n))+"): taken — "+(taken.length?taken.join(", "):"none")+(missed.length?"; missed — "+missed.join(", "):""));
+    }
+    lines.push("");
+    lines.push("LIQUIDS (ml/day)");
+    for (var n2=from; n2<=DAY; n2++){ lines.push("Day "+n2+": "+(dayFieldsFor(n2).liquidMl||0)+" ml"); }
+    lines.push("");
+    lines.push("WEIGHT LOG");
+    var wlog = safeGet("weight_log", []);
+    if (!wlog.length) lines.push("No entries logged.");
+    wlog.forEach(function(e){ lines.push(fmtDateShort(new Date(e.ts))+": "+e.value+" kg"); });
+    lines.push("");
+    lines.push("PAIN LEVELS — last " + (DAY-from+1) + " days");
+    var anyPain = false;
+    for (var n3=from; n3<=DAY; n3++){
+      var pe = dayFieldsFor(n3).pain || [];
+      if (pe.length){ anyPain = true; lines.push("Day "+n3+": "+pe.map(function(p){ return p.time+" — level "+p.level; }).join(", ")); }
+    }
+    if (!anyPain) lines.push("No pain readings logged.");
+    lines.push("");
+    lines.push("PHOTOS / NOTES");
+    if (!photoCache.length) lines.push("None logged.");
+    photoCache.forEach(function(p){ lines.push(fmtDateShort(new Date(p.ts))+": "+(p.note||"(photo, no note)")); });
+    return lines.join("\n");
+  }
+  (function(){
+    var btn = document.getElementById("exportBtn");
+    if (!btn) return;
+    btn.addEventListener("click", function(){
+      var text = buildExportText();
+      if (cloud.downloads){
+        cloud.downloads.save({ filename: "recovery-summary-day"+DAY+".txt", data: text }).catch(function(){ showExportFallback(text); });
+      } else {
+        showExportFallback(text);
+      }
+    });
+  })();
+  function showExportFallback(text){
+    var wrap = document.getElementById("exportFallback");
+    var area = document.getElementById("exportText");
+    if (area) area.value = text;
+    if (wrap) wrap.hidden = false;
+    try{ navigator.clipboard.writeText(text); }catch(e){}
+  }
+
+  // ================= BOOT CLOUD =================
+  (function initCloud(){
+    var statusPill = document.getElementById("syncStatus");
+    var statusText = document.getElementById("syncStatusText");
+    var capPromise;
+    try{
+      if (window.claude && typeof window.claude.use === "function"){
+        capPromise = Promise.all([ window.claude.use("db"), window.claude.use("assets"), window.claude.use("downloads") ]);
+      } else {
+        capPromise = Promise.resolve([null,null,null]);
+      }
+    }catch(e){ capPromise = Promise.resolve([null,null,null]); }
+
+    capPromise.then(function(res){
+      cloud.db = res[0]; cloud.assets = res[1]; cloud.downloads = res[2];
+      if (cloud.db){
+        if (statusPill) statusPill.classList.add("on");
+        if (statusText) statusText.textContent = "Synced across devices";
+        return hydrateFromCloud().then(loadAndRenderPhotos);
+      } else if (statusText) {
+        statusText.textContent = "This device only";
+      }
+    }).catch(function(e){
+      console.error("cloud init failed", e);
+      if (statusText) statusText.textContent = "This device only";
+    });
+  })();
+
+})();
+</script>
+</body>
+</html>
