@@ -119,13 +119,35 @@
   }
   .tabs-inner{ max-width:640px; margin:0 auto; display:grid; grid-template-columns:repeat(7,1fr); gap:1px; }
   .tab-btn{
-    display:flex; flex-direction:column; align-items:center; gap:2px;
+    position:relative;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
     background:none; border:none; color:var(--ink-faint);
-    padding:6px 1px; border-radius:11px; cursor:pointer; font-size:8.8px; font-weight:600;
-    letter-spacing:.01em;
+    padding:8px 1px; border-radius:11px; cursor:pointer; font-size:9.6px; font-weight:650;
+    letter-spacing:.01em; min-height:50px;
   }
-  .tab-btn svg{ width:17px; height:17px; }
+  .tab-btn svg{ width:19px; height:19px; }
   .tab-btn.active{ color:var(--primary); background:var(--primary-soft); }
+  .tab-badge{
+    position:absolute; top:4px; right:calc(50% - 15px);
+    width:8px; height:8px; border-radius:50%; background:var(--rose);
+    border:1.5px solid var(--surface);
+  }
+
+  /* Toast */
+  .toast{
+    position:fixed; left:50%; bottom:calc(80px + env(safe-area-inset-bottom,0px)); z-index:40;
+    transform:translateX(-50%) translateY(8px);
+    background:var(--ink); color:var(--bg);
+    padding:9px 18px; border-radius:999px; font-size:12.5px; font-weight:650;
+    box-shadow:var(--shadow); opacity:0; pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease; white-space:nowrap;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* Snapshot strip */
+  .trend-down{ color:var(--primary); }
+  .trend-up{ color:var(--rose); }
+  .trend-flat{ color:var(--ink-soft); }
 
   /* ---------- Panels ---------- */
   main{ padding-top:18px; }
@@ -353,6 +375,17 @@
     <!-- TODAY -->
     <div class="panel active" id="panel-today">
       <div class="wrap" style="padding:0;">
+        <section>
+          <div class="section-title">Today at a glance</div>
+          <div class="card">
+            <div class="stat-grid">
+              <div class="stat-tile"><div class="stat-value num" id="snapLiquid">0</div><div class="stat-label">ml liquids</div></div>
+              <div class="stat-tile"><div class="stat-value num" id="snapMeds">0/0</div><div class="stat-label">meds taken</div></div>
+              <div class="stat-tile"><div class="stat-value num" id="snapWalk">0</div><div class="stat-label">walks</div></div>
+            </div>
+          </div>
+        </section>
+
         <section id="dueSection" hidden>
           <div class="section-title">Due now</div>
           <div class="card due-card">
@@ -722,9 +755,12 @@
     </div>
   </main>
 
+  <div class="toast" id="toast"></div>
+
   <nav class="tabs">
     <div class="tabs-inner">
       <button class="tab-btn active" data-tab="today">
+        <span class="tab-badge" id="tabBadgeToday" hidden></span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg>
         Today
       </button>
@@ -788,6 +824,85 @@
   function safeSet(key, val){
     try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){}
   }
+
+  // ---------- toast (logging feedback) ----------
+  var toastTimer = null;
+  function showToast(msg){
+    var el = document.getElementById("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.classList.remove("show"); }, 1400);
+  }
+
+  // ---------- one-time import: real history days 1-7 (Sep 22-28), transcribed
+  // directly from screenshots of the original artifact (its own history never
+  // made it into a shared cloud store, so this is the reliable way to carry it
+  // over). Everything here matches what was shown except day 6's medsChecked
+  // breakdown: the History tab only showed "4/5 meds" for that day, not which
+  // one was skipped, so one is picked arbitrarily to match the count — every
+  // other field (liquids, walks, breathing, weight, day 7's meals/meds) is exact.
+  // Only fills in local values that are still at their default, so anything
+  // already logged in this browser is never overwritten.
+  (function importArtifactHistory(){
+    var FLAG = "importedArtifactHistory_v2";
+    if (safeGet(FLAG, false)) return;
+
+    var seedDays = {
+      "2026-9-22": { liquidMl:1250, walk:7, breath:7, medsChecked:{ controloc:true, tavanic:true, clexane:true } },
+      "2026-9-23": { liquidMl:1350, walk:9, breath:9, medsChecked:{ controloc:true, tavanic:true, clexane:true } },
+      "2026-9-24": { liquidMl:1810, walk:5, breath:5, medsChecked:{ controloc:true, tavanic:true, clexane:true, centrum:true, ursofalk:true, neurobion:true, caltrate:true } },
+      "2026-9-25": { liquidMl:1850, walk:1, breath:1, medsChecked:{ controloc:true, tavanic:true, clexane:true, centrum:true, ursofalk:true, caltrate:true } },
+      "2026-9-26": { liquidMl:1950, walk:0, breath:0, medsChecked:{ controloc:true, tavanic:true, clexane:true, centrum:true, ursofalk:true, caltrate:true } },
+      "2026-9-27": { liquidMl:1600, walk:0, breath:0, medsChecked:{ controloc:true, clexane:true, centrum:true, ursofalk:true } },
+      "2026-9-28": {
+        liquidMl:1250, walk:3, breath:4,
+        medsChecked:{ controloc:true, centrum:true, ursofalk:true, caltrate:true },
+        meals:[
+          { time:"14:04", type:"Breakfast", text:"200 ml tomato soup" },
+          { time:"14:04", type:"Lunch", text:"200 ml ice chocolate" },
+          { time:"17:54", type:"Dinner", text:"150 ml mhlbya" }
+        ]
+      }
+    };
+
+    Object.keys(seedDays).forEach(function(key){
+      var seed = seedDays[key];
+      if (!safeGet("liquid_"+key, 0)) safeSet("liquid_"+key, seed.liquidMl || 0);
+      if (!safeGet("walk_"+key, 0)) safeSet("walk_"+key, seed.walk || 0);
+      if (!safeGet("breath_"+key, 0)) safeSet("breath_"+key, seed.breath || 0);
+      var curMeds = safeGet("meds_"+key, {});
+      safeSet("meds_"+key, Object.assign({}, seed.medsChecked || {}, curMeds));
+      if (seed.meals && seed.meals.length){
+        var curMeals = safeGet("meals_"+key, []);
+        if (!curMeals.length) safeSet("meals_"+key, seed.meals);
+      }
+    });
+
+    var seedWeights = [
+      { y:2026, m:8, d:22, value:102 },
+      { y:2026, m:8, d:23, value:100.7 },
+      { y:2026, m:8, d:24, value:98 },
+      { y:2026, m:8, d:25, value:95.9 },
+      { y:2026, m:8, d:26, value:95 },
+      { y:2026, m:8, d:27, value:93.95 },
+      { y:2026, m:8, d:28, value:94.25 }
+    ];
+    var curWeightLog = safeGet("weight_log", []);
+    var existingKeys = {};
+    curWeightLog.forEach(function(e){ existingKeys[e.k] = true; });
+    seedWeights.forEach(function(w){
+      var d = new Date(w.y, w.m, w.d);
+      var k = dateKey(d);
+      if (existingKeys[k]) return;
+      curWeightLog.push({ k:k, ts:d.getTime(), value:w.value });
+    });
+    curWeightLog.sort(function(a,b){ return a.ts-b.ts; });
+    safeSet("weight_log", curWeightLog);
+
+    safeSet(FLAG, true);
+  })();
 
   // ---------- medication data ----------
   // startDay/endDay are post-op day numbers (day 1 = the first full day after surgery), inclusive
@@ -958,6 +1073,10 @@
     var id = btn.getAttribute("data-id");
     checkedMap[id] = !checkedMap[id];
     safeSet("meds_"+dateKey(today), checkedMap);
+    if (checkedMap[id]){
+      var takenMed = MEDS.filter(function(m){ return m.id===id; })[0];
+      if (takenMed) showToast(takenMed.name+" marked as taken");
+    }
     renderTodayMeds();
     renderAllMeds();
     renderHistory();
@@ -1021,7 +1140,11 @@
     ["liqTodayBar","liqTodayBar2"].forEach(function(id){ var e=document.getElementById(id); if(e) e.style.width = pct+"%"; });
   }
   document.querySelectorAll(".qa-btn[data-add]").forEach(function(b){
-    b.addEventListener("click", function(){ setLiq(getLiq() + parseInt(b.getAttribute("data-add"),10)); });
+    b.addEventListener("click", function(){
+      var amt = parseInt(b.getAttribute("data-add"),10);
+      setLiq(getLiq() + amt);
+      showToast("+"+amt+" ml logged");
+    });
   });
   var resetBtn = document.getElementById("resetLiquid");
   if (resetBtn) resetBtn.addEventListener("click", function(){ setLiq(0); });
@@ -1035,9 +1158,9 @@
     document.getElementById("breathCount").textContent = safeGet(breathKey(), 0);
   }
   var walkBtn = document.getElementById("walkAdd");
-  if (walkBtn) walkBtn.addEventListener("click", function(){ safeSet(walkKey(), safeGet(walkKey(),0)+1); renderMovement(); renderHistory(); pushDay(dateKey(today)); });
+  if (walkBtn) walkBtn.addEventListener("click", function(){ safeSet(walkKey(), safeGet(walkKey(),0)+1); renderMovement(); renderHistory(); pushDay(dateKey(today)); showToast("Walk logged"); });
   var breathBtn = document.getElementById("breathAdd");
-  if (breathBtn) breathBtn.addEventListener("click", function(){ safeSet(breathKey(), safeGet(breathKey(),0)+1); renderMovement(); renderHistory(); pushDay(dateKey(today)); });
+  if (breathBtn) breathBtn.addEventListener("click", function(){ safeSet(breathKey(), safeGet(breathKey(),0)+1); renderMovement(); renderHistory(); pushDay(dateKey(today)); showToast("Breathing set logged"); });
   var resetMoveBtn = document.getElementById("resetMovement");
   if (resetMoveBtn) resetMoveBtn.addEventListener("click", function(){ safeSet(walkKey(),0); safeSet(breathKey(),0); renderMovement(); renderHistory(); pushDay(dateKey(today)); });
   renderMovement();
@@ -1164,10 +1287,12 @@
     var first = log[0], last = log[log.length-1];
     var change = last.value - first.value;
     var changeStr = (change>0?"+":"") + change.toFixed(1) + " kg";
+    var dirClass = change < 0 ? "trend-down" : (change > 0 ? "trend-up" : "trend-flat");
+    var arrow = change < 0 ? "↓" : (change > 0 ? "↑" : "→");
     el.innerHTML =
       '<div class="stat-tile"><div class="stat-value num">'+first.value+'</div><div class="stat-label">start &middot; '+fmtDateShort(new Date(first.ts))+'</div></div>'+
       '<div class="stat-tile"><div class="stat-value num">'+last.value+'</div><div class="stat-label">latest &middot; '+fmtDateShort(new Date(last.ts))+'</div></div>'+
-      '<div class="stat-tile"><div class="stat-value num">'+changeStr+'</div><div class="stat-label">since start</div></div>';
+      '<div class="stat-tile"><div class="stat-value num '+dirClass+'">'+arrow+' '+changeStr+'</div><div class="stat-label">since start</div></div>';
   }
 
   function renderWeightChart(log){
@@ -1292,7 +1417,25 @@
     var takenCount = activeMeds.filter(function(m){ return !!checked[m.id]; }).length;
     return { day:n, date:d, liq:liq, walk:walk, breath:breath, medsTaken:takenCount, medsTotal:activeMeds.length };
   }
+  function renderSnapshot(){
+    var liqEl = document.getElementById("snapLiquid");
+    var medsEl = document.getElementById("snapMeds");
+    var walkEl = document.getElementById("snapWalk");
+    if (!liqEl) return;
+    var key = dateKey(today);
+    var liq = safeGet("liquid_"+key, 0);
+    if (typeof liq !== "number" || isNaN(liq)) liq = 0;
+    var walk = safeGet("walk_"+key, 0);
+    var checked = safeGet("meds_"+key, {});
+    var active = MEDS.filter(function(m){ return medActiveToday(m, DAY); });
+    var taken = active.filter(function(m){ return !!checked[m.id]; }).length;
+    liqEl.textContent = liq;
+    medsEl.textContent = taken + "/" + active.length;
+    walkEl.textContent = walk;
+  }
+
   function renderHistory(){
+    renderSnapshot();
     var listEl = document.getElementById("historyList");
     var summaryEl = document.getElementById("historySummary");
     if (!listEl) return;
@@ -1467,8 +1610,10 @@
   function renderDueBanner(){
     var section = document.getElementById("dueSection");
     var list = document.getElementById("dueList");
-    if (!section || !list) return;
     var due = overdueMedsToday();
+    var badge = document.getElementById("tabBadgeToday");
+    if (badge) badge.hidden = !due.length;
+    if (!section || !list) return;
     if (!due.length){ section.hidden = true; list.innerHTML = ""; return; }
     section.hidden = false;
     list.innerHTML = due.map(function(m){
